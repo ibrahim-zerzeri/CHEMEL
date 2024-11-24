@@ -32,13 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] == 0) {
         $imageTmpName = $_FILES['productImage']['tmp_name'];
         $imageName = basename($_FILES['productImage']['name']);
-        $imageDir = 'uploads/'; // Directory where you want to store the image
-        $imagePath = $imageDir . uniqid() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+        $uploadDir = './../../uploads/'; // Use relative path for the database
+        $uniqueImageName = uniqid() . '.' . pathinfo($imageName, PATHINFO_EXTENSION);
+        $imagePath = $uploadDir . $uniqueImageName;
 
         // Move the uploaded file to the 'uploads' directory
-        if (move_uploaded_file($imageTmpName, $imagePath)) {
-            // Successfully uploaded image, update the path in the database
-        } else {
+        if (!move_uploaded_file($imageTmpName, __DIR__ . '/../../uploads/' . $uniqueImageName)) {
             echo "Error: Could not upload the image.";
         }
     }

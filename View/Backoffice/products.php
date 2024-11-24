@@ -232,44 +232,6 @@ John Abraham</h5>
                     </div>
                     <a href="user-management.php" class="btn btn-secondary">Go to User Management</a>
                 </div>
-                
-
-             <!-- <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Add Product</h5>
-                            <div class="card-body">
-                                <form id="productForm">
-                                    <div class="form-row">
-                                        <div class="form-group col-md-4">
-                                            <label for="productName">Product Name</label>
-                                            <input type="text" class="form-control" id="productName" required>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="productCategory">Category</label>
-                                            <input type="text" class="form-control" id="productCategory" required>
-                                        </div>
-                                        <div class="form-group col-md-4">
-                                            <label for="productPrice">Price</label>
-                                            <input type="number" class="form-control" id="productPrice" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md-4">
-                                            <label for="productQuantity">Quantity</label>
-                                            <input type="number" class="form-control" id="productQuantity" required>
-                                        </div>
-                                        <div class="form-group col-md-8">
-                                            <label for="productDescription">Description</label>
-                                            <textarea class="form-control" id="productDescription" rows="2" required></textarea>
-                                        </div>
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Add Product</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>-->  
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="card">
