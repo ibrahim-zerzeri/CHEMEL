@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $fileName = $_FILES['productImage']['name'];
 
         // Define the target directory for the uploaded image (absolute path)
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/Web Project/uploads/';
+        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/CHEMEL/uploads/';
         $filePath = $uploadDir . $fileName;
 
         // Define the relative path to be stored in the database
