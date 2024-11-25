@@ -1,12 +1,109 @@
 <?php
-include_once '../../config.php'; // Adjust the path based on your folder structure
+session_start(); // Start session to manage cart data
+include_once '../../config.php'; // Adjust path based on your folder structure
 
 $conn = config::getConnexion();
+
+try {
+  // Query to count the total quantities
+  $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
+  $query = $conn->prepare($sql);
+  $query->execute();
+  $result = $query->fetch(PDO::FETCH_ASSOC);
+
+  // Store the total quantity in a variable
+  $totalQuantity = $result['total_quantity'];
+} catch (Exception $e) {
+  echo 'Error: ' . $e->getMessage();
+}
+// Fetch products for display
 $sql = "SELECT * FROM product";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle "Add to Cart" submission
+if (isset($_POST['add_to_cart'])) {
+    $productId = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+
+    // Fetch product details from the database
+    $productQuery = $conn->prepare("SELECT * FROM product WHERE ID = :id");
+    $productQuery->execute(['id' => $productId]);
+    $product = $productQuery->fetch(PDO::FETCH_ASSOC);
+
+    if ($product) {
+        // Step 1: Identify or Create a Basket for the Session
+        if (!isset($_SESSION['basket_id'])) {
+            // Create a new basket if none exists
+            $createBasketQuery = $conn->prepare("INSERT INTO basket () VALUES ()");
+            $createBasketQuery->execute();
+            $_SESSION['basket_id'] = $conn->lastInsertId(); // Store the basket ID in the session
+        }
+        $basketId = $_SESSION['basket_id'];
+
+        // Step 2: Add or Update the Product in the Basket
+        $basketProductQuery = $conn->prepare("
+            SELECT * FROM basket_products WHERE basket_id = :basket_id AND product_id = :product_id
+        ");
+        $basketProductQuery->execute([
+            'basket_id' => $basketId,
+            'product_id' => $productId
+        ]);
+        $existingProduct = $basketProductQuery->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingProduct) {
+            // Update quantity if the product is already in the basket
+            $updateBasketProductQuery = $conn->prepare("
+                UPDATE basket_products 
+                SET quantity = quantity + :quantity 
+                WHERE basket_id = :basket_id AND product_id = :product_id
+            ");
+            $updateBasketProductQuery->execute([
+                'quantity' => $quantity,
+                'basket_id' => $basketId,
+                'product_id' => $productId
+            ]);
+        } else {
+            // Insert new product into the basket
+            $insertBasketProductQuery = $conn->prepare("
+                INSERT INTO basket_products (basket_id, product_id, quantity)
+                VALUES (:basket_id, :product_id, :quantity)
+            ");
+            $insertBasketProductQuery->execute([
+                'basket_id' => $basketId,
+                'product_id' => $productId,
+                'quantity' => $quantity
+            ]);
+        }
+
+        // Step 3: Update the Session Cart (Optional, for UI purposes)
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+        if (isset($_SESSION['cart'][$productId])) {
+            $_SESSION['cart'][$productId]['quantity'] += $quantity;
+        } else {
+            $_SESSION['cart'][$productId] = [
+                'product_name' => $product['PRODUCT_NAME'],
+                'price' => $product['PRICE'],
+                'quantity' => $quantity,
+                'image_path' => $product['IMAGE_PATH']
+            ];
+        }
+
+        // Redirect or display a success message
+        header("Location: marketplace.php?success=1");
+        exit();
+    } else {
+        // Handle product not found error
+        header("Location: marketplace.php?error=Product not found");
+        exit();
+    }
+}
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -75,7 +172,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 	          <li class="nav-item"><a href="about.php" class="nav-link">About</a></li>
 	          
 	          <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
-	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span><?php echo htmlspecialchars('['.($totalQuantity ?? "0").']') ; ?></a></li>
 
 	        </ul>
 	      </div>
@@ -172,48 +269,38 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <!-- Products Section -->
             <div class="col-lg-9 col-md-8">
                 <div class="row">
-                    <?php foreach ($products as $product): ?>
-                        <div class="col-sm-12 col-md-6 col-lg-4 ftco-animate d-flex">
-                            <div class="product d-flex flex-column">
-                                <!-- Product Image -->
-                                <a href="#" class="img-prod">
-                                <img class="product-img" src="<?= htmlspecialchars($product['IMAGE_PATH']) ?>" alt="<?= htmlspecialchars($product['PRODUCT_NAME']) ?>">
-
-
-                                    <div class="overlay"></div>
-                                </a>
-                                <!-- Product Details -->
-                                <div class="text py-3 pb-4 px-3">
-                                    <div class="d-flex">
-                                        <div class="cat">
-                                            <span><?= htmlspecialchars($product['CATEGORY']) ?></span>
-                                        </div>
-                                        <div class="rating">
-                                            <p class="text-right mb-0">
-                                                <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                                <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                                <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                                <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                                <a href="#"><span class="ion-ios-star-outline"></span></a>
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <h3><a href="#"><?= htmlspecialchars($product['PRODUCT_NAME']) ?></a></h3>
-                                    <div class="pricing">
-                                        <p class="price"><span><?= htmlspecialchars($product['PRICE']) ?> USD</span></p>
-                                    </div>
-                                    <p class="bottom-area d-flex px-3">
-                                        <a href="#" class="add-to-cart text-center py-2 mr-1">
-                                            <span>Add to cart <i class="ion-ios-add ml-1"></i></span>
-                                        </a>
-                                        <a href="#" class="buy-now text-center py-2">
-                                            Buy now<span><i class="ion-ios-cart ml-1"></i></span>
-                                        </a>
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
+                <?php foreach ($products as $product): ?>
+    <div class="col-sm-12 col-md-6 col-lg-4 ftco-animate d-flex">
+        <div class="product d-flex flex-column">
+            <!-- Product Image -->
+            <a href="#" class="img-prod">
+                <img class="product-img" src="<?= htmlspecialchars($product['IMAGE_PATH']) ?>" alt="<?= htmlspecialchars($product['PRODUCT_NAME']) ?>">
+                <div class="overlay"></div>
+            </a>
+            <!-- Product Details -->
+            <div class="text py-3 pb-4 px-3">
+                <div class="d-flex">
+                    <div class="cat">
+                        <span><?= htmlspecialchars($product['CATEGORY']) ?></span>
+                    </div>
+                </div>
+                <h3><a href="#"><?= htmlspecialchars($product['PRODUCT_NAME']) ?></a></h3>
+                <div class="pricing">
+                    <p class="price"><span><?= htmlspecialchars($product['PRICE']) ?> USD</span></p>
+                </div>
+                <p class="bottom-area d-flex px-3">
+                    <form action="marketplace.php" method="POST">
+                        <input type="hidden" name="product_id" value="<?= $product['ID'] ?>">
+                        <input type="number" name="quantity" value="1" min="1" class="form-control w-25" required>
+                        <button type="submit" name="add_to_cart" class="add-to-cart text-center py-2 mr-1">
+                            <span>Add to cart <i class="ion-ios-add ml-1"></i></span>
+                        </button>
+                    </form>
+                </p>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
                 </div>
             </div>
         </div>
