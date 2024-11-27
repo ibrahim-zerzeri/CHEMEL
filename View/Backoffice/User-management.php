@@ -6,6 +6,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <html lang="en">
  
 <head>
+    <!-- jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -205,6 +210,12 @@ John Abraham</h5>
                                 </li>
                             </ul>
                         </div>
+                    </li>
+
+                    <li>
+                        <a class="nav-link" href="ManageQuiz.php" >
+                            Manage Quizzes
+                        </a>
                     </li>
 
                 </ul>

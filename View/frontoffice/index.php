@@ -59,7 +59,7 @@
 	        <ul class="navbar-nav ml-auto">
 	          <li class="nav-item active"><a href="index.php" class="nav-link">Home</a></li>
 	         
-              <li class="nav-item"><a href="learning.php" class="nav-link">Learning</a></li>
+              <li class="nav-item"><a href="subjects.php" class="nav-link">Learning</a></li>
 			  <li class="nav-item"><a href="marketplace.php" class="nav-link">Marketplace</a></li>
 			  <li class="nav-item"><a href="profile.php" class="nav-link">Profile</a></li>
 	          <li class="nav-item"><a href="about.php" class="nav-link">About</a></li>
