@@ -1,11 +1,17 @@
 <?php
 include '../../controller/UserController.php';
-$userC = new UserController();
 
-if (isset($_GET['id'])) {
-  $id = $_GET['id'];
-  $userC->deleteUser($id);
+// Check if 'id' is set and is a valid integer
+if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
+    $userid = intval($_GET["id"]);
+
+    // Initialize the controller
+    $userC = new UserController();
+
+    // Call the deleteOffer method
+    $userC->deleteUser($userid);
+        // Redirect to the offer list page on successful deletion
+        header('Location: ../../User-management.php');
+        exit;
 }
-header('Location: userList.php');
-exit();
-?>
+       

@@ -4,7 +4,7 @@ class User {
     private ?int $id;
     private ?string $username;
     private ?string $password;
-    private ?int $birthday;  // Assuming birthday is stored as an integer (YYYYMMDD or just YYYY)
+    private ?int $birthday;
     private ?string $establishment;
 
     // Constructor
@@ -17,7 +17,6 @@ class User {
     }
 
     // Getters and Setters
-
     public function getId(): ?int {
         return $this->id;
     }

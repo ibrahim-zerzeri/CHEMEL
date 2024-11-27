@@ -2,29 +2,19 @@
 include(__DIR__ . '/../config.php');
 include(__DIR__ . '/../Model/User.php');
 
-class UserController
-{
-    public function getUserById($id) {
-        $query = "SELECT * FROM users WHERE id = :id";
-        $stmt = $this->db->prepare($query);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-        $stmt->execute();
-        return $stmt->fetch(PDO::FETCH_ASSOC);  // Assuming you are fetching as an associative array
-    }
-    public function listUsers()
-    {
+class UserController {
+    public function listUsers() {
         $sql = "SELECT * FROM users";
         $db = config::getConnexion();
         try {
-            $liste = $db->query($sql);
-            return $liste;
+            $list = $db->query($sql);
+            return $list;
         } catch (Exception $e) {
             die('Error:' . $e->getMessage());
         }
     }
 
-    function deleteUser($id)
-    {
+    public function deleteUser($id) {
         $sql = "DELETE FROM users WHERE id = :id";
         $db = config::getConnexion();
         $req = $db->prepare($sql);
@@ -37,11 +27,8 @@ class UserController
         }
     }
 
-    function addUser($user)
-    {
-        var_dump($user);
-        $sql = "INSERT INTO users (username, password, birthday, establishment)  
-        VALUES (:username, :password, :birthday, :establishment)";
+    public function addUser($user) {
+        $sql = "INSERT INTO users (username, password, birthday, establishment) VALUES (:username, :password, :birthday, :establishment)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -56,12 +43,9 @@ class UserController
         }
     }
 
-    function updateUser($user, $id)
-    {
-        var_dump($user);
+    public function updateUser($user, $id) {
         try {
             $db = config::getConnexion();
-
             $query = $db->prepare(
                 'UPDATE users SET 
                     username = :username,
@@ -85,13 +69,12 @@ class UserController
         }
     }
 
-    function showUser($id)
-    {
-        $sql = "SELECT * from users where id = $id";
+    public function showUser($id) {
+        $sql = "SELECT * FROM users WHERE id = :id";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
-            $query->execute();
+            $query->execute(['id' => $id]);
 
             $user = $query->fetch();
             return $user;
