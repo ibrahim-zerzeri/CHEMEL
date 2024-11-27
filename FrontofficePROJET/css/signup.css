@@ -1,0 +1,76 @@
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #d4af7f; /* Beige background */
+    color: #333;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.signup-container {
+    background-color: #f8f8f8; /* Light gray for the form container */
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+}
+
+h2 {
+    color: #d4af7f;
+    text-align: center;
+    margin-bottom: 30px;
+    font-weight: bold;
+    margin-top: 0;
+    font-size: 24px;
+}
+
+.form-group label {
+    color: #333;
+    font-weight: 600;
+}
+
+.form-control {
+    border-radius: 4px;
+    border: 1px solid #d4af7f;
+    background-color: #f8f8f8;
+    color: #333;
+}
+
+.form-control:focus {
+    border-color: #d4af7f;
+    box-shadow: 0 0 5px #d4af7f;
+}
+
+.btn {
+    background-color: #d4af7f;
+    border: none;
+    color: #000;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: #b59c6a;
+}
+
+.footer-text {
+    color: #333;
+    text-align: center;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+.footer-text a {
+    color: #d4af7f;
+    text-decoration: none;
+}
+
+.footer-text a:hover {
+    text-decoration: underline;
+}
