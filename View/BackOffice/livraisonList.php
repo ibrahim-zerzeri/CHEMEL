@@ -20,14 +20,14 @@ $list = $orderController->listOrders(); // Liste des ordres
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Order Management</title>
-    <<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
-<link href="assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
-<link rel="stylesheet" href="assets/libs/css/style.css">
-<link rel="stylesheet" href="assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
-<link rel="stylesheet" href="assets/vendor/datatables/css/dataTables.bootstrap4.css">
-<link rel="stylesheet" href="assets/vendor/datatables/css/buttons.bootstrap4.css">
-<link rel="stylesheet" href="assets/vendor/datatables/css/select.bootstrap4.css">
-<link rel="stylesheet" href="assets/vendor/datatables/css/fixedHeader.bootstrap4.css">
+    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="assets/libs/css/style.css">
+    <link rel="stylesheet" href="assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" href="assets/vendor/datatables/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" href="assets/vendor/datatables/css/buttons.bootstrap4.css">
+    <link rel="stylesheet" href="assets/vendor/datatables/css/select.bootstrap4.css">
+    <link rel="stylesheet" href="assets/vendor/datatables/css/fixedHeader.bootstrap4.css">
 
 <!-- jQuery and Bootstrap JS in the correct order -->
 <script src="assets/vendor/jquery/jquery-3.3.1.min.js"></script>
@@ -248,8 +248,8 @@ John Abraham</h5>
                                 <thead>
                                     <form method="POST" action="updateOrder.php">
                                     <tr>
-                                        <th>ID</th>
-                                        <th>Product</th>
+                                        <th>ID Livraison</th>
+                                        <th>ID Panier</th>
                                         <th>Status</th>
                                         <th colspan="2">Actions</th>
                                     </tr>
@@ -260,8 +260,8 @@ John Abraham</h5>
                                     foreach ($list as $order) {
                                     ?>
                                     <tr>
-                                        <td><?= $order['id']; ?></td>
-                                        <td><?= $order['product']; ?></td>
+                                        <td><?= $order['idL']; ?></td>
+                                        <td><?= $order['idP']; ?></td>
                                         <td><?= $order['status']; ?></td>
                                         <td align="center">
 
