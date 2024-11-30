@@ -1,3 +1,110 @@
+<?php
+session_start(); // Start session to manage cart data
+include_once '../../config.php'; // Adjust path based on your folder structure
+
+$conn = config::getConnexion();
+
+try {
+  // Query to count the total quantities
+  $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
+  $query = $conn->prepare($sql);
+  $query->execute();
+  $result = $query->fetch(PDO::FETCH_ASSOC);
+
+  // Store the total quantity in a variable
+  $totalQuantity = $result['total_quantity'];
+} catch (Exception $e) {
+  echo 'Error: ' . $e->getMessage();
+}
+// Fetch products for display
+$sql = "SELECT * FROM product";
+$stmt = $conn->prepare($sql);
+$stmt->execute();
+$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+// Handle "Add to Cart" submission
+if (isset($_POST['add_to_cart'])) {
+    $productId = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+
+    // Fetch product details from the database
+    $productQuery = $conn->prepare("SELECT * FROM product WHERE ID = :id");
+    $productQuery->execute(['id' => $productId]);
+    $product = $productQuery->fetch(PDO::FETCH_ASSOC);
+
+    if ($product) {
+		
+        // Step 1: Identify or Create a Basket for the Session
+        if (!isset($_SESSION['basket_id'])) {
+            // Create a new basket if none exists
+            $createBasketQuery = $conn->prepare("INSERT INTO basket () VALUES ()");
+            $createBasketQuery->execute();
+            $_SESSION['basket_id'] = $conn->lastInsertId(); // Store the basket ID in the session
+        }
+        $basketId = $_SESSION['basket_id'];
+
+        // Step 2: Add or Update the Product in the Basket
+        $basketProductQuery = $conn->prepare("
+            SELECT * FROM basket_products WHERE basket_id = :basket_id AND product_id = :product_id
+        ");
+        $basketProductQuery->execute([
+            'basket_id' => $basketId,
+            'product_id' => $productId
+        ]);
+        $existingProduct = $basketProductQuery->fetch(PDO::FETCH_ASSOC);
+
+        if ($existingProduct) {
+            // Update quantity if the product is already in the basket
+            $updateBasketProductQuery = $conn->prepare("
+                UPDATE basket_products 
+                SET quantity = quantity + :quantity 
+                WHERE basket_id = :basket_id AND product_id = :product_id
+            ");
+            $updateBasketProductQuery->execute([
+                'quantity' => $quantity,
+                'basket_id' => $basketId,
+                'product_id' => $productId
+            ]);
+        } else {
+            // Insert new product into the basket
+            $insertBasketProductQuery = $conn->prepare("
+                INSERT INTO basket_products (basket_id, product_id, quantity)
+                VALUES (:basket_id, :product_id, :quantity)
+            ");
+            $insertBasketProductQuery->execute([
+                'basket_id' => $basketId,
+                'product_id' => $productId,
+                'quantity' => $quantity
+            ]);
+        }
+
+        // Step 3: Update the Session Cart (Optional, for UI purposes)
+        if (!isset($_SESSION['cart'])) {
+            $_SESSION['cart'] = [];
+        }
+        if (isset($_SESSION['cart'][$productId])) {
+            $_SESSION['cart'][$productId]['quantity'] += $quantity;
+        } else {
+            $_SESSION['cart'][$productId] = [
+                'product_name' => $product['PRODUCT_NAME'],
+			
+                'price' => $product['PRICE'],
+                'quantity' => $quantity,
+                'image_path' => $product['IMAGE_PATH']
+            ];
+        }
+
+        // Redirect or display a success message
+        header("Location: marketplace.php?success=1");
+        exit();
+    } else {
+	
+        // Handle product not found error
+        header("Location: marketplace.php?error=Product not found");
+        exit();
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -48,29 +155,24 @@
 		    </div>
 		  </div>
     </div>
-    <nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
+	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
 	      <a class="navbar-brand" href="index.php">Minishop</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
 
-	      <div class="collapse navbar-collapse" id="ftco-nav">
+		  <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
-	          <li class="nav-item"><a href="index.php" class="nav-link">Home</a></li>
-	          <li class="nav-item dropdown active">
-              <a class="nav-link dropdown-toggle" href="#" id="dropdown04" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Catalog</a>
-              <div class="dropdown-menu" aria-labelledby="dropdown04">
-              	<a class="dropdown-item" href="shop.php">Shop</a>
-                <a class="dropdown-item" href="product-single.php">Single Product</a>
-                <a class="dropdown-item" href="cart.php">Cart</a>
-                <a class="dropdown-item" href="checkout.php">Checkout</a>
-              </div>
-            </li>
+	          <li class="nav-item active"><a href="index.php" class="nav-link">Home</a></li>
+	         
+              <li class="nav-item"><a href="learning.php" class="nav-link">Learning</a></li>
+			  <li class="nav-item"><a href="marketplace.php" class="nav-link">Marketplace</a></li>
+			  <li class="nav-item"><a href="profile.php" class="nav-link">Profile</a></li>
 	          <li class="nav-item"><a href="about.php" class="nav-link">About</a></li>
-	          <li class="nav-item"><a href="blog.php" class="nav-link">Blog</a></li>
+	          
 	          <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
-	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span><?php echo htmlspecialchars('['.($totalQuantity ?? "0").']') ; ?></a></li>
 
 	        </ul>
 	      </div>
@@ -105,49 +207,52 @@
 						        <th>Total</th>
 						      </tr>
 						    </thead>
-						    <tbody>
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(images/product-3.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Nike Free RN 2019 iD</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$4.90</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$4.90</td>
-						      </tr><!-- END TR-->
+							<tbody>
+  <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])): ?>
+    <?php
+    // Assuming $db is your database connection
+    foreach ($_SESSION['cart'] as $productId => $product):
+        // Fetch the quantity from basket_products table based on productId
+		$stmt = $conn->prepare("SELECT quantity FROM basket_products WHERE product_id = :product_id");
+        $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
+        $stmt->execute();
+        $basketProduct = $stmt->fetch(PDO::FETCH_ASSOC);
+        $quantity = $basketProduct ? $basketProduct['quantity'] : 0; // Get quantity or default to 0
 
-						      <tr class="text-center">
-						        <td class="product-remove"><a href="#"><span class="ion-ios-close"></span></a></td>
-						        
-						        <td class="image-prod"><div class="img" style="background-image:url(images/product-4.jpg);"></div></td>
-						        
-						        <td class="product-name">
-						        	<h3>Nike Free RN 2019 iD</h3>
-						        	<p>Far far away, behind the word mountains, far from the countries</p>
-						        </td>
-						        
-						        <td class="price">$15.70</td>
-						        
-						        <td class="quantity">
-						        	<div class="input-group mb-3">
-					             	<input type="text" name="quantity" class="quantity form-control input-number" value="1" min="1" max="100">
-					          	</div>
-					          </td>
-						        
-						        <td class="total">$15.70</td>
-						      </tr><!-- END TR-->
-						    </tbody>
+    ?>
+      <tr class="text-center">
+        <td class="product-remove">
+          <a href="remove_from_cart.php?product_id=<?php echo $productId; ?>"><span class="ion-ios-close"></span></a>
+        </td>
+        
+        <td class="image-prod">
+          <div class="img" style="background-image:url('<?php echo $product['image_path']; ?>');"></div>
+        </td>
+        
+		<td class="product-name">
+  <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
+  <p><?php echo htmlspecialchars($product['DESCRIPTION']); ?></p> <!-- Product description added here -->
+</td>
+
+        <td class="price">$<?php echo number_format($product['price'], 2); ?></td>
+        
+        <td class="quantity">
+          <div class="input-group mb-3">
+            <input type="number" name="quantity" class="quantity form-control input-number" value="<?php echo $quantity; ?>" min="1" max="100">
+          </div>
+        </td>
+        
+        <td class="total">$<?php echo number_format($product['price'] * $quantity, 2); ?></td>
+      </tr>
+    <?php endforeach; ?>
+  <?php else: ?>
+    <tr class="text-center">
+      <td colspan="6">Your cart is empty.</td>
+    </tr>
+  <?php endif; ?>
+</tbody>
+
+
 						  </table>
 					  </div>
     			</div>

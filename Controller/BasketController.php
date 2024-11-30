@@ -46,7 +46,7 @@ class BasketController {
     public function getBasketContents(int $basketId): array {
         $sql = "SELECT p.*, bp.quantity 
                 FROM basket_products bp
-                INNER JOIN products p ON bp.product_id = p.id
+                INNER JOIN product p ON bp.product_id = p.id
                 WHERE bp.basket_id = :basket_id";
         $db = config::getConnexion();
         try {
