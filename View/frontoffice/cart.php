@@ -8,6 +8,14 @@ $liste = $productC->listBasket();
 $basket_contents = new BasketController();
 $totalQuantity=$basket_contents->getTotalQuantity();
 $totalAmount = 0;
+if (isset($_SESSION['basket_id'])) {
+  $basketId = $_SESSION['basket_id'];
+  // Now you can use $basketId to fetch the cart contents, etc.
+} else {
+  // Handle the case where basket_id is not in the session
+  echo "Basket ID not found.";
+}
+
 
 
 ?>
@@ -17,7 +25,7 @@ $totalAmount = 0;
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Minishop - Free Bootstrap 4 Template by Colorlib</title>
+    <title>CHEMEL</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     
@@ -43,30 +51,10 @@ $totalAmount = 0;
     <link rel="stylesheet" href="css/style.css">
   </head>
   <body class="goto-here">
-		<div class="py-1 bg-black">
-    	<div class="container">
-    		<div class="row no-gutters d-flex align-items-start align-items-center px-md-0">
-	    		<div class="col-lg-12 d-block">
-		    		<div class="row d-flex">
-		    			<div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-phone2"></span></div>
-						    <span class="text">+ 1235 2355 98</span>
-					    </div>
-					    <div class="col-md pr-4 d-flex topper align-items-center">
-					    	<div class="icon mr-2 d-flex justify-content-center align-items-center"><span class="icon-paper-plane"></span></div>
-						    <span class="text">youremail@email.com</span>
-					    </div>
-					    <div class="col-md-5 pr-4 d-flex topper align-items-center text-lg-right">
-						    <span class="text">3-5 Business days delivery &amp; Free Returns</span>
-					    </div>
-				    </div>
-			    </div>
-		    </div>
-		  </div>
-    </div>
+		
 	<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	      <a class="navbar-brand" href="index.php">Minishop</a>
+	      <a class="navbar-brand" href="index.php">CHEMEL</a>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="oi oi-menu"></span> Menu
 	      </button>
@@ -94,7 +82,7 @@ $totalAmount = 0;
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
           	<p class="breadcrumbs"><span class="mr-2"><a href="index.php">Home</a></span> <span>Cart</span></p>
-            <h1 class="mb-0 bread">My Wishlist</h1>
+            <h1 class="mb-0 bread">My Cart</h1>
           </div>
         </div>
       </div>
@@ -118,28 +106,30 @@ $totalAmount = 0;
 						    </thead>
 							<tbody>
   
-    <?php
-
+   
   
 
-    foreach ($liste as $product):
-     $quantity=$basket_contents->getProductQuantity($product['ID']);
+<?php
+foreach ($liste as $product):
+    // Get the quantity from the basket
+    $quantity = $basket_contents->getProductQuantity($product['ID']);
 
-    ?>
+    // Only display the product if the quantity is greater than 0
+    if ($quantity > 0):
+?>
       <tr class="text-center">
         <td class="product-remove">
-          <a href="remove_from_cart.php?product_id=<?php echo $product['ID']; ?>"><span class="ion-ios-close"></span></a>
-        </td>
+        <a href="remove_from_cart.php?basket_id=<?php echo $basketId; ?>&product_id=<?php echo $product['ID']; ?>">Remove</a>
+       </td>
         
         <td class="image-prod">
           <div class="img" style="background-image:url('<?php echo $product['IMAGE_PATH']; ?>');"></div>
         </td>
         
 		<td class="product-name">
-  <h3><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></h3>
-  <p><?php echo htmlspecialchars($product['DESCRIPTION']);?></p> 
-
-</td>
+          <h3><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></h3>
+          <p><?php echo htmlspecialchars($product['DESCRIPTION']);?></p>
+        </td>
 
         <td class="price"><?php echo number_format($product['PRICE'], 2); ?>DT</td>
         
@@ -152,7 +142,9 @@ $totalAmount = 0;
         <td class="total"><?php echo number_format($product['PRICE'] * $quantity, 2); ?>DT</td>
       </tr>
       <?php $totalAmount = $totalAmount + ($product['PRICE'] * $quantity); ?>
-    <?php endforeach; ?>
+    <?php endif; ?>
+<?php endforeach; ?>
+
 </tbody>
 
 
@@ -171,7 +163,7 @@ $totalAmount = 0;
     						<span><?php echo number_format($totalAmount, 2); ?>DT</span>
     					</p>
     				</div>
-    				<p class="text-center"><a href="checkout.php" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+    				<p class="text-center">  <a href="checkout.php" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
     			</div>
     		</div>
 			</div>
@@ -190,7 +182,7 @@ $totalAmount = 0;
         <div class="row mb-5">
           <div class="col-md">
             <div class="ftco-footer-widget mb-4">
-              <h2 class="ftco-heading-2">Minishop</h2>
+              <h2 class="ftco-heading-2">CHEMEL</h2>
               <p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia.</p>
               <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-5">
                 <li class="ftco-animate"><a href="#"><span class="icon-twitter"></span></a></li>
