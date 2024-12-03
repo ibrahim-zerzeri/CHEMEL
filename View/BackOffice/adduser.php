@@ -1,11 +1,24 @@
 <?php
 include '../../controller/UserController.php';
 
+
 $error = "";
 $user = null;
 
 // Create an instance of the controller
+$pdo = config::getConnexion();
 $userController = new UserController();
+if (isset($_POST['register'])){
+    $checkUSER= $pdo->prepare("SELECT * FROM users WHERE username = :username");
+    $checkUSER->execute([':username' => $_POST['username']]);
+    if($checkUSER->rowCount() > 0){
+        echo '<script>alert("user Already Exist!")</script>';
+     
+    }
+    else
+    {
+ 
+
 
 if (
     isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["birthday"]) && isset($_POST["establishment"])
@@ -30,6 +43,10 @@ if (
         $error = "Missing information";
     }
 }
+}
+}
+
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -132,7 +149,8 @@ if (
                 <input class="form-control form-control-user mb-3" type="text" id="establishment" name="establishment" required>
                 <span id="establishment_error"></span>
 
-                <button type="submit" class="btn btn-primary btn-user btn-block">Add User</button>
+                <button type="submit" class="btn btn-primary btn-user btn-block" name="register">Add User</button>
+                <a href="../FrontOffice/SIGNIN.php">SIGN IN</a>
             </form>
             <?php if ($error): ?>
                 <div class="alert alert-danger mt-3"><?php echo $error; ?></div>
