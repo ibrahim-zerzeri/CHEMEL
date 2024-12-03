@@ -4,6 +4,18 @@ include(__DIR__ . '/../Model/Product.php'); // Include the Product model (if usi
 
 class ProductController
 {
+
+    public function listBasket()
+    {
+        $sql = "SELECT * FROM product";
+        $db = config::getConnexion();
+        try {
+            $liste = $db->query($sql);
+            return $liste;
+        } catch (Exception $e) {
+            die('Error:' . $e->getMessage());
+        }
+    }
     // Add a new product
     public function addProduct($product, $image)
     {

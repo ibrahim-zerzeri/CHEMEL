@@ -1,110 +1,19 @@
 <?php
-session_start(); // Start session to manage cart data
-include_once '../../config.php'; // Adjust path based on your folder structure
+session_start();
+include '../../Controller/ProductController.php';
+include '../../Controller/BasketController.php';
 
-$conn = config::getConnexion();
+$productC = new ProductController();
+$liste = $productC->listBasket();
+$basket_contents = new BasketController();
+$totalQuantity=$basket_contents->getTotalQuantity();
+$totalAmount = 0;
 
-try {
-  // Query to count the total quantities
-  $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
-  $query = $conn->prepare($sql);
-  $query->execute();
-  $result = $query->fetch(PDO::FETCH_ASSOC);
 
-  // Store the total quantity in a variable
-  $totalQuantity = $result['total_quantity'];
-} catch (Exception $e) {
-  echo 'Error: ' . $e->getMessage();
-}
-// Fetch products for display
-$sql = "SELECT * FROM product";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Handle "Add to Cart" submission
-if (isset($_POST['add_to_cart'])) {
-    $productId = $_POST['product_id'];
-    $quantity = $_POST['quantity'];
-
-    // Fetch product details from the database
-    $productQuery = $conn->prepare("SELECT * FROM product WHERE ID = :id");
-    $productQuery->execute(['id' => $productId]);
-    $product = $productQuery->fetch(PDO::FETCH_ASSOC);
-
-    if ($product) {
-		
-        // Step 1: Identify or Create a Basket for the Session
-        if (!isset($_SESSION['basket_id'])) {
-            // Create a new basket if none exists
-            $createBasketQuery = $conn->prepare("INSERT INTO basket () VALUES ()");
-            $createBasketQuery->execute();
-            $_SESSION['basket_id'] = $conn->lastInsertId(); // Store the basket ID in the session
-        }
-        $basketId = $_SESSION['basket_id'];
-
-        // Step 2: Add or Update the Product in the Basket
-        $basketProductQuery = $conn->prepare("
-            SELECT * FROM basket_products WHERE basket_id = :basket_id AND product_id = :product_id
-        ");
-        $basketProductQuery->execute([
-            'basket_id' => $basketId,
-            'product_id' => $productId
-        ]);
-        $existingProduct = $basketProductQuery->fetch(PDO::FETCH_ASSOC);
-
-        if ($existingProduct) {
-            // Update quantity if the product is already in the basket
-            $updateBasketProductQuery = $conn->prepare("
-                UPDATE basket_products 
-                SET quantity = quantity + :quantity 
-                WHERE basket_id = :basket_id AND product_id = :product_id
-            ");
-            $updateBasketProductQuery->execute([
-                'quantity' => $quantity,
-                'basket_id' => $basketId,
-                'product_id' => $productId
-            ]);
-        } else {
-            // Insert new product into the basket
-            $insertBasketProductQuery = $conn->prepare("
-                INSERT INTO basket_products (basket_id, product_id, quantity)
-                VALUES (:basket_id, :product_id, :quantity)
-            ");
-            $insertBasketProductQuery->execute([
-                'basket_id' => $basketId,
-                'product_id' => $productId,
-                'quantity' => $quantity
-            ]);
-        }
-
-        // Step 3: Update the Session Cart (Optional, for UI purposes)
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-        if (isset($_SESSION['cart'][$productId])) {
-            $_SESSION['cart'][$productId]['quantity'] += $quantity;
-        } else {
-            $_SESSION['cart'][$productId] = [
-                'product_name' => $product['PRODUCT_NAME'],
-			
-                'price' => $product['PRICE'],
-                'quantity' => $quantity,
-                'image_path' => $product['IMAGE_PATH']
-            ];
-        }
-
-        // Redirect or display a success message
-        header("Location: marketplace.php?success=1");
-        exit();
-    } else {
-	
-        // Handle product not found error
-        header("Location: marketplace.php?error=Product not found");
-        exit();
-    }
-}
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -208,33 +117,31 @@ if (isset($_POST['add_to_cart'])) {
 						      </tr>
 						    </thead>
 							<tbody>
-  <?php if (isset($_SESSION['cart']) && !empty($_SESSION['cart'])): ?>
+  
     <?php
-    // Assuming $db is your database connection
-    foreach ($_SESSION['cart'] as $productId => $product):
-        // Fetch the quantity from basket_products table based on productId
-		$stmt = $conn->prepare("SELECT quantity FROM basket_products WHERE product_id = :product_id");
-        $stmt->bindParam(':product_id', $productId, PDO::PARAM_INT);
-        $stmt->execute();
-        $basketProduct = $stmt->fetch(PDO::FETCH_ASSOC);
-        $quantity = $basketProduct ? $basketProduct['quantity'] : 0; // Get quantity or default to 0
+
+  
+
+    foreach ($liste as $product):
+     $quantity=$basket_contents->getProductQuantity($product['ID']);
 
     ?>
       <tr class="text-center">
         <td class="product-remove">
-          <a href="remove_from_cart.php?product_id=<?php echo $productId; ?>"><span class="ion-ios-close"></span></a>
+          <a href="remove_from_cart.php?product_id=<?php echo $product['ID']; ?>"><span class="ion-ios-close"></span></a>
         </td>
         
         <td class="image-prod">
-          <div class="img" style="background-image:url('<?php echo $product['image_path']; ?>');"></div>
+          <div class="img" style="background-image:url('<?php echo $product['IMAGE_PATH']; ?>');"></div>
         </td>
         
 		<td class="product-name">
-  <h3><?php echo htmlspecialchars($product['product_name']); ?></h3>
-  <p><?php echo htmlspecialchars($product['DESCRIPTION']); ?></p> <!-- Product description added here -->
+  <h3><?php echo htmlspecialchars($product['PRODUCT_NAME']); ?></h3>
+  <p><?php echo htmlspecialchars($product['DESCRIPTION']);?></p> 
+
 </td>
 
-        <td class="price">$<?php echo number_format($product['price'], 2); ?></td>
+        <td class="price"><?php echo number_format($product['PRICE'], 2); ?>DT</td>
         
         <td class="quantity">
           <div class="input-group mb-3">
@@ -242,14 +149,10 @@ if (isset($_POST['add_to_cart'])) {
           </div>
         </td>
         
-        <td class="total">$<?php echo number_format($product['price'] * $quantity, 2); ?></td>
+        <td class="total"><?php echo number_format($product['PRICE'] * $quantity, 2); ?>DT</td>
       </tr>
+      <?php $totalAmount = $totalAmount + ($product['PRICE'] * $quantity); ?>
     <?php endforeach; ?>
-  <?php else: ?>
-    <tr class="text-center">
-      <td colspan="6">Your cart is empty.</td>
-    </tr>
-  <?php endif; ?>
 </tbody>
 
 
@@ -261,22 +164,11 @@ if (isset($_POST['add_to_cart'])) {
     			<div class="col col-lg-5 col-md-6 mt-5 cart-wrap ftco-animate">
     				<div class="cart-total mb-3">
     					<h3>Cart Totals</h3>
-    					<p class="d-flex">
-    						<span>Subtotal</span>
-    						<span>$20.60</span>
-    					</p>
-    					<p class="d-flex">
-    						<span>Delivery</span>
-    						<span>$0.00</span>
-    					</p>
-    					<p class="d-flex">
-    						<span>Discount</span>
-    						<span>$3.00</span>
-    					</p>
+    				
     					<hr>
     					<p class="d-flex total-price">
     						<span>Total</span>
-    						<span>$17.60</span>
+    						<span><?php echo number_format($totalAmount, 2); ?>DT</span>
     					</p>
     				</div>
     				<p class="text-center"><a href="checkout.php" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>

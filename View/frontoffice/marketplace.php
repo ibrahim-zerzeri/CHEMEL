@@ -85,12 +85,15 @@ if (isset($_POST['add_to_cart'])) {
             $_SESSION['cart'][$productId]['quantity'] += $quantity;
         } else {
             $_SESSION['cart'][$productId] = [
-                'product_name' => $product['PRODUCT_NAME'],
-                'price' => $product['PRICE'],
-                'quantity' => $quantity,
-                'image_path' => $product['IMAGE_PATH']
+              'product_name' => $product['product_name'],
+              'category' => $product['category'],
+              'description' => $product['description'],
+              'price' => $product['price'],
+              'quantity' => $quantity,
+              'image_path' => $product['image_path']
             ];
         }
+        
 
         // Redirect or display a success message
         header("Location: marketplace.php?success=1");

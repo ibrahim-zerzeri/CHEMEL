@@ -12,6 +12,53 @@ class BasketController {
         }
     }
 
+
+    public function getTotalQuantity()
+{
+    $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
+    $db = config::getConnexion();
+    try {
+        $query = $db->prepare($sql);
+        $query->execute();
+        $result = $query->fetch(PDO::FETCH_ASSOC);
+        // Return the total quantity
+        return $result['total_quantity'] ?? 0; // Return 0 if no result
+    } catch (Exception $e) {
+        die('Error: ' . $e->getMessage());
+    }
+}
+    public function getProductQuantity(int $productId): int {
+        $sql = "SELECT quantity FROM basket_products WHERE product_id = :product_id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute(['product_id' => $productId]);
+            $result = $query->fetch();
+    
+            // If no record is found, return 0
+            return $result ? (int)$result['quantity'] : 0;
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+    
+   
+
+    public function getBasketProduct()
+    {
+        $sql = "SELECT * FROM basket_products";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute();
+            return $query->fetchAll();
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+
+  
+
     // Add a product to a basket
     public function addProductToBasket(int $basketId, int $productId, int $quantity): void {
         $sql = "INSERT INTO basket_products (basket_id, product_id, quantity) 
