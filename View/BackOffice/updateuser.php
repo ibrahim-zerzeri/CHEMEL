@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['usernam
         $offerController->updateUser($offer, $_POST['id']);
 
         // Redirect to user list after update
-        header('Location: ../../User-management.php');
+        header('Location:User-management.php');
         exit;
     } else {
         $error = "All fields are required.";

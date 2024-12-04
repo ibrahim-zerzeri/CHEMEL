@@ -12,10 +12,10 @@ if (!(isset($_SESSION['user']))){
     <title>HOMEPAGE</title>
 </head>
 <body>
-    <h1>Welcome ,</h1>
-    <?php
+    <h1>Welcome <?php
     echo $_SESSION['user']->username;
-    ?>
+    ?></h1>
+    
     <a href="SIGNOUT.php">SIGN OUT</a>
     
 </body>

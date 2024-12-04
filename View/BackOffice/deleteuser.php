@@ -11,7 +11,7 @@ if (isset($_GET["id"]) && is_numeric($_GET["id"])) {
     // Call the deleteOffer method
     $userC->deleteUser($userid);
         // Redirect to the offer list page on successful deletion
-        header('Location: ../../User-management.php');
+        header('Location:User-management.php');
         exit;
 }
        

@@ -1,5 +1,5 @@
 <?php
-include 'controller/UserController.php';
+include '../../controller/UserController.php';
 $travelOfferC = new UserController();
 $list = $travelOfferC->listUsers();
 ?>
@@ -12,14 +12,14 @@ $list = $travelOfferC->listUsers();
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Data Tables</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
-    <link href="assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="assets/libs/css/style.css">
-    <link rel="stylesheet" href="assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendor/datatables/css/dataTables.bootstrap4.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendor/datatables/css/buttons.bootstrap4.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendor/datatables/css/select.bootstrap4.css">
-    <link rel="stylesheet" type="text/css" href="assets/vendor/datatables/css/fixedHeader.bootstrap4.css">
+    <link rel="stylesheet" href="../../assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="../../assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/libs/css/style.css">
+    <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/vendor/datatables/css/dataTables.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/vendor/datatables/css/buttons.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/vendor/datatables/css/select.bootstrap4.css">
+    <link rel="stylesheet" type="text/css" href="../../assets/vendor/datatables/css/fixedHeader.bootstrap4.css">
 </head>
 
 <body>
@@ -52,7 +52,7 @@ $list = $travelOfferC->listUsers();
                                         <div class="list-group">
                                             <a href="#" class="list-group-item list-group-item-action active">
                                                 <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-2.jpg" alt="" class="user-avatar-md rounded-circle"></div>
+                                                    <div class="notification-list-user-img"><img src="../../assets/images/avatar-2.jpg" alt="" class="user-avatar-md rounded-circle"></div>
                                                     <div class="notification-list-user-block"><span class="notification-list-user-name">Jeremy Rakestraw</span>accepted your invitation to join the team.
                                                         <div class="notification-date">2 min ago</div>
                                                     </div>
@@ -60,7 +60,7 @@ $list = $travelOfferC->listUsers();
                                             </a>
                                             <a href="#" class="list-group-item list-group-item-action">
                                                 <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-3.jpg" alt="" class="user-avatar-md rounded-circle"></div>
+                                                    <div class="notification-list-user-img"><img src="../../assets/images/avatar-3.jpg" alt="" class="user-avatar-md rounded-circle"></div>
                                                     <div class="notification-list-user-block"><span class="notification-list-user-name">
 John Abraham</span>is now following you
                                                         <div class="notification-date">2 days ago</div>
@@ -69,7 +69,7 @@ John Abraham</span>is now following you
                                             </a>
                                             <a href="#" class="list-group-item list-group-item-action">
                                                 <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-4.jpg" alt="" class="user-avatar-md rounded-circle"></div>
+                                                    <div class="notification-list-user-img"><img src="../../assets/images/avatar-4.jpg" alt="" class="user-avatar-md rounded-circle"></div>
                                                     <div class="notification-list-user-block"><span class="notification-list-user-name">Monaan Pechi</span> is watching your main repository
                                                         <div class="notification-date">2 min ago</div>
                                                     </div>
@@ -77,7 +77,7 @@ John Abraham</span>is now following you
                                             </a>
                                             <a href="#" class="list-group-item list-group-item-action">
                                                 <div class="notification-info">
-                                                    <div class="notification-list-user-img"><img src="../assets/images/avatar-5.jpg" alt="" class="user-avatar-md rounded-circle"></div>
+                                                    <div class="notification-list-user-img"><img src="../../assets/images/avatar-5.jpg" alt="" class="user-avatar-md rounded-circle"></div>
                                                     <div class="notification-list-user-block"><span class="notification-list-user-name">Jessica Caruso</span>accepted your invitation to join the team.
                                                         <div class="notification-date">2 min ago</div>
                                                     </div>
@@ -97,24 +97,24 @@ John Abraham</span>is now following you
                                 <li class="connection-list">
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                            <a href="#" class="connection-item"><img src="../assets/images/github.png" alt="" > <span>Github</span></a>
+                                            <a href="#" class="connection-item"><img src="../../assets/images/github.png" alt="" > <span>Github</span></a>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                            <a href="#" class="connection-item"><img src="../assets/images/dribbble.png" alt="" > <span>Dribbble</span></a>
+                                            <a href="#" class="connection-item"><img src="../../assets/images/dribbble.png" alt="" > <span>Dribbble</span></a>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                            <a href="#" class="connection-item"><img src="../assets/images/dropbox.png" alt="" > <span>Dropbox</span></a>
+                                            <a href="#" class="connection-item"><img src="../../assets/images/dropbox.png" alt="" > <span>Dropbox</span></a>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                            <a href="#" class="connection-item"><img src="../assets/images/bitbucket.png" alt=""> <span>Bitbucket</span></a>
+                                            <a href="#" class="connection-item"><img src="../../assets/images/bitbucket.png" alt=""> <span>Bitbucket</span></a>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                            <a href="#" class="connection-item"><img src="../assets/images/mail_chimp.png" alt="" ><span>Mail chimp</span></a>
+                                            <a href="#" class="connection-item"><img src="../../assets/images/mail_chimp.png" alt="" ><span>Mail chimp</span></a>
                                         </div>
                                         <div class="col-xl-4 col-lg-4 col-md-6 col-sm-12 col-12 ">
-                                            <a href="#" class="connection-item"><img src="../assets/images/slack.png" alt="" > <span>Slack</span></a>
+                                            <a href="#" class="connection-item"><img src="../../assets/images/slack.png" alt="" > <span>Slack</span></a>
                                         </div>
                                     </div>
                                 </li>
@@ -216,90 +216,78 @@ John Abraham</h5>
         <!-- wrapper  -->
         <!-- ============================================================== -->
         <div class="dashboard-wrapper">
-            <div class="container-fluid  dashboard-content">
-                <!-- ============================================================== -->
-                <!-- pageheader -->
-                <!-- ============================================================== -->
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <div class="page-header">
-                            <h2 class="pageheader-title">Data Tables</h2>
-                            <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
-                            <div class="page-breadcrumb">
-                                <nav aria-label="breadcrumb">
-                                    <ol class="breadcrumb">
-                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                        <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Tables</a></li>
-                                        <li class="breadcrumb-item active" aria-current="page">Data Tables</li>
-                                    </ol>
-                                </nav>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- ============================================================== -->
-                <!-- end pageheader -->
-                <!-- ============================================================== -->
-                <div class="row">
-                    <!-- ============================================================== -->
-                    <!-- basic table  -->
-                    <!-- ============================================================== -->
-                    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                        <div class="card">
-                            <h5 class="card-header">Basic Table</h5>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-striped table-bordered first">
-                                        <thead>
-                                            <tr>
-                                                <th>ID</th>
-                                                <th>Username</th>
-                                                <th>Password</th>
-                                                <th>Year of Birth</th>
-                                                <th>Establishment</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+    <div class="container-fluid dashboard-content">
+        <div class="card">
+            <h5 class="card-header">Basic Table</h5>
 
-                                        <?php
-        foreach ($list as $offer) {
-        ?> 
-          <tr>
-            <td><?php echo $offer['id']; ?></td>
-            <td><?php echo $offer['username']; ?></td>
-            <td><?php echo $offer['password']; ?></td>
-            <td><?php echo $offer['birthday']; ?></td>
-            <td><?php echo $offer['establishment']; ?></td>
-            <td align="center">
-                <form method="POST" action="view/BackOffice/updateuser.php">
-                    <input class="btn btn-primary btn-sm" type="submit" name="update" value="Update">
-                    <input type="hidden" value=<?PHP echo $offer['id']; ?> name="id">
-                </form>
-            </td>
-            <td>
-                <a href="view/BackOffice/deleteuser.php?id=<?php echo $offer['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
-            </td>
-                                                </tr>
-                            
-        
-      
-            <?php
-    }
-    ?>
-                                           
-                                          
-                                        </tbody>
-                                       
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ============================================================== -->
-                    <!-- end basic table  -->
-                    <!-- ============================================================== -->
+            <!-- Search Bar -->
+            <input 
+                type="text" 
+                id="searchBar" 
+                onkeyup="filterTable()" 
+                placeholder="Search by username..." 
+                class="form-control mb-3"
+            >
+            
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered first" id="userTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Password</th>
+                                <th>Year of Birth</th>
+                                <th>Establishment</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Dynamically Rendered Rows from PHP -->
+                            <?php foreach ($list as $offer): ?>
+                                <tr>
+                                    <td><?php echo $offer['id']; ?></td>
+                                    <td><?php echo $offer['username']; ?></td>
+                                    <td><?php echo $offer['password']; ?></td>
+                                    <td><?php echo $offer['birthday']; ?></td>
+                                    <td><?php echo $offer['establishment']; ?></td>
+                                    <td align="center">
+                                        <form method="POST" action="updateuser.php">
+                                            <input class="btn btn-primary btn-sm" type="submit" name="update" value="Update">
+                                            <input type="hidden" value="<?php echo $offer['id']; ?>" name="id">
+                                        </form>
+                                    </td>
+                                    <td>
+                                        <a href="deleteuser.php?id=<?php echo $offer['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function filterTable() {
+        // Get the input value
+        const searchValue = document.getElementById("searchBar").value.toLowerCase();
+        const table = document.getElementById("userTable");
+        const rows = table.getElementsByTagName("tr");
+
+        // Loop through all rows in the table body
+        for (let i = 1; i < rows.length; i++) { // Skip header row
+            const usernameCell = rows[i].getElementsByTagName("td")[1]; // Get the 'Username' column
+            if (usernameCell) {
+                const usernameText = usernameCell.textContent || usernameCell.innerText;
+                // Show/Hide row based on match
+                rows[i].style.display = usernameText.toLowerCase().includes(searchValue) ? "" : "none";
+            }
+        }
+    }
+</script>
              
                     <!-- ============================================================== -->
                     <!-- data table  -->

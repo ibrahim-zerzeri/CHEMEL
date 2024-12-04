@@ -38,7 +38,7 @@ if (
         $userController->addUser($user);
 
         // Redirect to the user list page
-        header('Location:../../User-management.php');
+        header('Location:User-management.php');
     } else {
         $error = "Missing information";
     }
