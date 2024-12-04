@@ -1,24 +1,27 @@
 <?php
-
+// Use include_once to avoid multiple inclusions
 include_once(__DIR__ . '/../../Controller/QuizController.php');
 include_once(__DIR__ . '/../../Model/Quiz.php');
 
 $quizController = new QuizController();
 
-if (isset($_GET['id']) && is_numeric($_GET['id'])) {  
-    $course_id = intval($_GET['id']); 
-    $course = $quizController->fetchCourseById($course_id); 
-    $quizzes = $quizController->fetchQuizzesByCourseId($course_id);
+// Get the course_id from the URL
+if (isset($_GET['id']) && is_numeric($_GET['id'])) {  // Changed 'course_id' to 'id'
+    $course_id = intval($_GET['id']);  // Get the course_id passed in the URL
+    $course = $quizController->fetchCourseById($course_id);  // Fetch course details
+    $quizzes = $quizController->fetchQuizzesByCourseId($course_id);  // Fetch quizzes related to this course
 } else {
     echo "Invalid or missing course ID.";
     exit;
 }
 
+// Process the form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $results = [];
     foreach ($quizzes as $quiz) {
-        $user_answer = $_POST['quiz_' . $quiz['id']] ?? null; 
+        $user_answer = $_POST['quiz_' . $quiz['id']] ?? null;  // Get the user's answer for each quiz
 
+        // Compare with the correct answer and store the result
         $correct_answer = $quiz['correct_option'];
         $is_correct = ($user_answer === $correct_answer);
         $results[] = [
@@ -171,7 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="quiz-item">
                         <span class="badge bg-dark text-white mb-2">Question <?php echo $index + 1; ?> of <?php echo count($quizzes); ?></span>
                         <h3><?php echo htmlspecialchars($quiz['question']); ?></h3>
-                        <?php foreach (['A', 'B', 'C', 'D'] as $option): ?>
+                        <?php $options = ['A', 'B', 'C', 'D']; shuffle($options) ?>
+                        <?php foreach ($options as $option): ?>
                             <input type="radio" id="quiz_<?php echo $quiz['id'] . '_' . $option; ?>" name="quiz_<?php echo $quiz['id']; ?>" value="<?php echo $option; ?>">
                             <label for="quiz_<?php echo $quiz['id'] . '_' . $option; ?>">
                                 <?php echo htmlspecialchars($quiz['option_' . strtolower($option)]); ?>
@@ -187,46 +191,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </form>
 
     <?php if (isset($results)): ?>
-        <div class="results-container">
-            <h2 class="results-header">Your Results</h2>
-            <p class="score">Score: <?php echo round((array_sum(array_column($results, 'is_correct')) / count($results)) * 100); ?>%</p>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Question</th>
-                        <th>Your Answer</th>
-                        <th>Correct Answer</th>
-                        <th>Status</th>
+    <div class="results-container">
+        <h2 class="results-header">Your Results</h2>
+        <p class="score">Score: <?php echo round((array_sum(array_column($results, 'is_correct')) / count($results)) * 100); ?>%</p>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Question</th>
+                    <th>Correct Answer</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php 
+                $questionNumber = 1; // Début de la numérotation des questions
+                foreach ($results as $result): ?>
+                    <tr class="<?php echo $result['is_correct'] ? '' : ''; ?>"> <!-- No color classes -->
+                        <td>Question <?php echo $questionNumber++; ?></td> <!-- Affiche le numéro de la question -->
+                        <td><?php echo htmlspecialchars($result['correct_answer']); ?></td>
+                        <td>
+                            <i class="fas <?php echo $result['is_correct'] ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($results as $result): ?>
-                        <tr class="<?php echo $result['is_correct'] ? 'table-success' : 'table-danger'; ?>">
-                            <td>Question <?php echo $result['quiz_id']; ?></td>
-                            <td><?php echo htmlspecialchars($result['user_answer']); ?></td>
-                            <td><?php echo htmlspecialchars($result['correct_answer']); ?></td>
-                            <td>
-                                <i class="fas <?php echo $result['is_correct'] ? 'fa-check-circle' : 'fa-times-circle'; ?>"></i>
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                </tbody>
-            </table>
-        </div>
-    <?php endif; ?>
-
-    <a href="coursedet.php?id=<?php echo $course_id; ?>" class="btn-return">Return to Course</a>
-
-    <script>
-        const progressBar = document.getElementById('progressBar');
-        const totalQuizzes = <?php echo count($quizzes); ?>;
-        const updateProgress = () => {
-            const answered = document.querySelectorAll('input[type="radio"]:checked').length;
-            const percentage = Math.round((answered / totalQuizzes) * 100);
-            progressBar.style.width = `${percentage}%`;
-            progressBar.textContent = `${percentage}%`;
-        };
-        document.querySelectorAll('input[type="radio"]').forEach(input => input.addEventListener('change', updateProgress));
-    </script>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif; ?>
 </body>
 </html>

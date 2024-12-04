@@ -124,7 +124,8 @@ class QuizController
     
     function fetchQuizzesByCourseId($course_id) {
         $conn = Config::getConnexion();
-        $stmt = $conn->prepare("SELECT * FROM quizzes WHERE course_id = :course_id");
+        $stmt = $conn->prepare("SELECT * FROM quizzes WHERE COURSE_ID = :course_id ORDER BY RAND() LIMIT 5 ");
+        //" SELECT * FROM quizzes WHERE course_id = :course_id "
         $stmt->bindParam(':course_id', $course_id, PDO::PARAM_INT);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
