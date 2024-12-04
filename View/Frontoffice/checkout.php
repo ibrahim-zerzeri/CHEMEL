@@ -46,6 +46,7 @@ if (
         } catch (Exception $e) {
             $error = "Erreur lors de l'ajout de la commande: " . $e->getMessage();
         }
+        header('Location: ipay.php');
     } else {
         $error = "Tous les champs sont requis.";
     }
@@ -202,7 +203,7 @@ if (
 
             <div class="col-md-12">
                 <div class="form-group mt-4">
-                    <button type="submit" class="btn btn-primary py-3 px-4" href="./creditcardPayment/index.html">Passer la commande</button>
+                    <button type="submit" class="btn btn-primary py-3 px-4" href="./creditcardPayment/ipay.html">Passer la commande</button>
                 </div>
             </div>
         </form>

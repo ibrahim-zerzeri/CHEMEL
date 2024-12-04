@@ -35,9 +35,10 @@ class OrderController
         $sql = "INSERT INTO orders (client_name, product, address, postal_code, phone)
                 VALUES (:client_name, :product, :address, :postal_code, :phone)";
         $db = DatabaseConfig::getConnexion();
+    
         try {
             $query = $db->prepare($sql);
-            // Execution de la requête avec les paramètres associés
+            // Exécution de la requête avec les paramètres associés
             $query->execute([
                 'client_name' => $order->getClientName(),
                 'product' => $order->getProduct(),
@@ -45,18 +46,36 @@ class OrderController
                 'postal_code' => $order->getPostalCode(),
                 'phone' => $order->getPhone(),
             ]);
-            
-            // Vérifie si l'insertion a bien eu lieu
+    
+            // Vérifie si l'insertion a réussi
             if ($query->rowCount() > 0) {
-                return true; // Si l'insertion a réussi
+                // Récupération de l'ID du dernier ordre inséré
+                $lastOrderId = $db->lastInsertId();
+    
+                // Ajouter automatiquement une livraison pour cet ordre
+                $livraisonSql = "INSERT INTO livraison (idP, status) VALUES (:idP, :status)";
+                $livraisonQuery = $db->prepare($livraisonSql);
+                $livraisonQuery->execute([
+                    'idP' => $lastOrderId, // Utilisation de l'ID de l'ordre comme idP
+                    'status' => 'not yet', // Statut par défaut
+                ]);
+    
+                // Vérifie si la livraison a été ajoutée avec succès
+                if ($livraisonQuery->rowCount() > 0) {
+                    return true; // Retourne true si les deux insertions ont réussi
+                }
+    
+                return false; // Retourne false si l'ordre est ajouté mais pas la livraison
             }
-            return false; // Si aucune ligne n'a été affectée (probablement une erreur d'insertion)
+    
+            return false; // Si aucune ligne n'a été affectée pour l'ordre
         } catch (Exception $e) {
             // Gestion des erreurs
-            echo 'Erreur lors de l\'insertion : ' . $e->getMessage();
-            return false; // Retourne false si une erreur survient
+            echo 'Erreur lors de l\'insertion de l\'ordre ou de la livraison : ' . $e->getMessage();
+            return false; // Retourne false en cas d'erreur
         }
     }
+    
     
 
     public function updateOrder($order, $id) {

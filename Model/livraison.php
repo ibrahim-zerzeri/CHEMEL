@@ -20,7 +20,7 @@ class Database
 
 class livraison {
     private ?int $idL;
-    private ?int $idp;
+    private ?int $idP;
     private ?boolval $status;
 
     // Constructeur

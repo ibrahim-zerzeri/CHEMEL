@@ -1,25 +1,25 @@
 <?php
-// Inclure le contrôleur d'ordres
-include '../../controller/OrderController.php';
-$orderController = new OrderController();
-$list = $orderController->listOrders(); // Liste des ordres
+include '../../controller/LivraisonController.php';
+$livraisonController = new LivraisonController();
+$list = $livraisonController->listLivraison(); // Liste des livraisons
 ?>
 
-<!-- view/orders/list.php -->
+
+<!-- view/livraisons/list.php -->
 <!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
-    <title>Order Management</title>
+    <title>livraison Management</title>
 </head>
 <body>
-    <h2>Order Management</h2>
+    <h2>livraison Management</h2>
     
 <html lang="en">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Order Management</title>
+    <title>livraison Management</title>
     <link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.min.css">
     <link href="assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
     <link rel="stylesheet" href="assets/libs/css/style.css">
@@ -29,7 +29,7 @@ $list = $orderController->listOrders(); // Liste des ordres
     <link rel="stylesheet" href="assets/vendor/datatables/css/select.bootstrap4.css">
     <link rel="stylesheet" href="assets/vendor/datatables/css/fixedHeader.bootstrap4.css">
 
-<!-- jQuery and Bootstrap JS in the correct order -->
+<!-- jQuery and Bootstrap JS in the correct livraison -->
 <script src="assets/vendor/jquery/jquery-3.3.1.min.js"></script>
 
 
@@ -44,7 +44,7 @@ $list = $orderController->listOrders(); // Liste des ordres
         <!-- ============================================================== -->
          <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="./index.html">Concept</a>
+                <a class="navbar-brand" href="./index.html">CHEMEL</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -176,9 +176,9 @@ John Abraham</h5>
                                         <li class="nav-item">
                                             <a class="nav-link" href="./products.html">Products</a>
                                         </li>
-                                        <!-- Add active class to Orders link when on the orders page -->
+                                        <!-- Add active class to livraisons link when on the livraisons page -->
                                         <li class="nav-item">
-                                            <a class="nav-link active" href="./orders.html">Orders Management</a>
+                                            <a class="nav-link active" href="./orderList.php">Order Management</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="./livraisonList.php">Delevery Management</a>
@@ -221,61 +221,35 @@ John Abraham</h5>
         <!-- ============================================================== -->
         <div class="dashboard-wrapper">
     <div class="container-fluid dashboard-content">
-        
-            <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                <div class="page-header">
-                    <h2 class="pageheader-title">Data Tables</h2>
-                    <p class="pageheader-text">Proin placerat ante duiullam scelerisque a velit ac porta, fusce sit amet vestibulum mi. Morbi lobortis pulvinar quam.</p>
-                    <div class="page-breadcrumb">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Dashboard</a></li>
-                                <li class="breadcrumb-item"><a href="#" class="breadcrumb-link">Tables</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Data Tables</li>
-                            </ol>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        
         <div class="row">
             <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                 <div class="card">
-                    <h5 class="card-header">Order Management</h5>
+                    <h5 class="card-header">Gestion des livraisons</h5>
                     <div class="card-body">
                         <div class="table-responsive">
                             <table class="table table-striped table-bordered first">
                                 <thead>
-                                    <form method="POST" action="updateOrder.php">
                                     <tr>
                                         <th>ID Livraison</th>
-                                        <th>ID Panier</th>
+                                        <th>ID Panier (Order ID)</th>
                                         <th>Status</th>
                                         <th colspan="2">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    // Afficher les ordres dans la table
-                                    foreach ($list as $order) {
-                                    ?>
+                                    <?php foreach ($list as $livraison) { ?>
                                     <tr>
-                                        <td><?= $order['idL']; ?></td>
-                                        <td><?= $order['idP']; ?></td>
-                                        <td><?= $order['status']; ?></td>
-                                        <td align="center">
-
-                                        <a href="updateOrder.php?id=<?= $order['id']; ?>">Modifier</a>
-
-                                            </form>
+                                        <td><?= $livraison['idL']; ?></td>
+                                        <td><?= $livraison['idP']; ?></td>
+                                        <td><?= $livraison['status']; ?></td>
+                                        <td>
+                                            <a href="updateLivraison.php?id=<?= $livraison['idL']; ?>" class="btn btn-primary btn-sm">Modifier</a>
                                         </td>
                                         <td>
-                                            <a href="deleteOrder.php?id=<?= urlencode($order['id']); ?>" class="btn btn-danger btn-sm">Delete</a>
+                                            <a href="deleteOrder.php?id=<?= urlencode($livraison['idL']); ?>" class="btn btn-danger btn-sm">Supprimer</a>
                                         </td>
                                     </tr>
-                                    <?php
-                                    }
-                                    ?>
+                                    <?php } ?>
                                 </tbody>
                             </table>
                         </div>
