@@ -13,20 +13,21 @@ class BasketController {
     }
 
 
-    public function getTotalQuantity()
-{
-    $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
-    $db = config::getConnexion();
-    try {
-        $query = $db->prepare($sql);
-        $query->execute();
-        $result = $query->fetch(PDO::FETCH_ASSOC);
-        // Return the total quantity
-        return $result['total_quantity'] ?? 0; // Return 0 if no result
-    } catch (Exception $e) {
-        die('Error: ' . $e->getMessage());
+    public function getTotalQuantity(int $basketId) {
+        $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products WHERE basket_id = :basket_id";
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql); // Prepare the query
+            $query->bindParam(':basket_id', $basketId, PDO::PARAM_INT); // Bind parameter
+            $query->execute(); // Execute the query
+            $result = $query->fetch(PDO::FETCH_ASSOC); // Fetch the result
+            // Return the total quantity or 0 if no result
+            return $result['total_quantity'] ?? 0; 
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
     }
-}
+    
     public function getProductQuantity(int $productId): int {
         $sql = "SELECT quantity FROM basket_products WHERE product_id = :product_id";
         $db = config::getConnexion();

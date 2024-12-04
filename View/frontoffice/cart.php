@@ -6,7 +6,7 @@ include '../../Controller/BasketController.php';
 $productC = new ProductController();
 $liste = $productC->listBasket();
 $basket_contents = new BasketController();
-$totalQuantity=$basket_contents->getTotalQuantity();
+
 $totalAmount = 0;
 if (isset($_SESSION['basket_id'])) {
   $basketId = $_SESSION['basket_id'];
@@ -15,7 +15,7 @@ if (isset($_SESSION['basket_id'])) {
   // Handle the case where basket_id is not in the session
   echo "Basket ID not found.";
 }
-
+$totalQuantity=$basket_contents->getTotalQuantity($basketId);
 
 
 ?>
