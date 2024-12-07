@@ -11,9 +11,10 @@ if (isset($_GET['id'])) {
 }
 
 // Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['username'], $_POST['password'], $_POST['birthday'], $_POST['establishment'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'],$_POST['email'], $_POST['username'], $_POST['password'], $_POST['birthday'], $_POST['establishment'])) {
     if (
         !empty($_POST['id']) &&
+        !empty($_POST['email']) &&
         !empty($_POST['username']) &&
         !empty($_POST['password']) &&
         !empty($_POST['birthday']) &&
@@ -22,6 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['usernam
         // Create a new user object
         $offer = new User(
             null,
+            $_POST['email'],
             $_POST['username'],
             $_POST['password'],
             $_POST['birthday'],
@@ -146,6 +148,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['usernam
                 <form action="" method="POST" onsubmit="return validateForm();">
                     <!-- Hidden ID field -->
                     <input type="hidden" name="id" value="<?= htmlspecialchars($_GET['id'] ?? $_POST['id'] ?? '') ?>">
+
+                    <label for="email">Email:</label>
+                    <input class="form-control form-control-user" type="text" id="email" name="email" value="<?= htmlspecialchars($offer['email'] ?? '') ?>" required>
+                    <span id="email_error"></span>
 
                     <label for="username">Username:</label>
                     <input class="form-control form-control-user" type="text" id="username" name="username" value="<?= htmlspecialchars($offer['username'] ?? '') ?>" required>

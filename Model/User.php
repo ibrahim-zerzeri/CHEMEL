@@ -2,18 +2,24 @@
 
 class User {
     private ?int $id;
+    private ?string $email;
     private ?string $username;
     private ?string $password;
     private ?int $birthday;
     private ?string $establishment;
+    private ?bool $ban;
+    
 
     // Constructor
-    public function __construct(?int $id, ?string $username, ?string $password, ?int $birthday, ?string $establishment) {
+    public function __construct(?int $id,?string $email, ?string $username, ?string $password, ?int $birthday, ?string $establishment) {
         $this->id = $id;
+        $this->email=$email;
         $this->username = $username;
         $this->password = $password;
         $this->birthday = $birthday;
         $this->establishment = $establishment;
+        $this-> $ban=FALSE;
+        
     }
 
     // Getters and Setters
@@ -27,6 +33,13 @@ class User {
 
     public function getUsername(): ?string {
         return $this->username;
+    }
+    public function getEmail(): ?string {
+        return $this->email;
+    }
+    
+    public function setEmail(?string $email): void {
+        $this->email = $email;
     }
 
     public function setUsername(?string $username): void {
@@ -55,6 +68,13 @@ class User {
 
     public function setEstablishment(?string $establishment): void {
         $this->establishment = $establishment;
+    }
+    public function getBan(): ?bool {
+        return $this->ban;
+    }
+
+    public function setBan(?bool $ban): void {
+        $this->ban = !($ban);
     }
 }
 

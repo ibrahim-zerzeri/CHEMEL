@@ -21,13 +21,14 @@ if (isset($_POST['register'])){
 
 
 if (
-    isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["birthday"]) && isset($_POST["establishment"])
+    isset($_POST["email"]) &&isset($_POST["username"]) && isset($_POST["password"]) && isset($_POST["birthday"]) && isset($_POST["establishment"])
 ) {
     if (
-        !empty($_POST["username"]) && !empty($_POST["password"]) && !empty($_POST["birthday"]) && !empty($_POST["establishment"])
+        !empty($_POST["email"]) &&!empty($_POST["username"]) && !empty($_POST["password"]) && !empty($_POST["birthday"]) && !empty($_POST["establishment"])
     ) {
         $user = new User(
             null,
+            $_POST['email'],
             $_POST['username'],
             $_POST['password'],
             intval($_POST['birthday']),
@@ -133,6 +134,10 @@ if (
         <div class="card border-left-primary shadow py-4 px-4">
             <h1 class="h4 text-gray-800 mb-4 text-center">Add a User</h1>
             <form id="addUserForm" action="" method="POST" onsubmit="return validateForm();">
+            <label for="email">Email:</label>
+                <input class="form-control form-control-user mb-3" type="text" id="email" name="email" required>
+                <span id="email_error"></span>
+              
                 <label for="username">Username:</label>
                 <input class="form-control form-control-user mb-3" type="text" id="username" name="username" required>
                 <span id="username_error"></span>

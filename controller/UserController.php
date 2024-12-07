@@ -26,13 +26,15 @@ class UserController {
             die('Error:' . $e->getMessage());
         }
     }
+    
 
     public function addUser($user) {
-        $sql = "INSERT INTO users (username, password, birthday, establishment) VALUES (:username, :password, :birthday, :establishment)";
+        $sql = "INSERT INTO users (email,username, password, birthday, establishment, ban) VALUES (:email, :username, :password, :birthday, :establishment,FALSE)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
             $query->execute([
+                'email' => $user->getEmail(),
                 'username' => $user->getUsername(),
                 'password' => $user->getPassword(),
                 'birthday' => $user->getBirthday(),
@@ -48,6 +50,7 @@ class UserController {
             $db = config::getConnexion();
             $query = $db->prepare(
                 'UPDATE users SET 
+                    email = : email,
                     username = :username,
                     password = :password,
                     birthday = :birthday,
@@ -57,10 +60,31 @@ class UserController {
 
             $query->execute([
                 'id' => $id,
+                'email' => $user->getEmail(),
                 'username' => $user->getUsername(),
                 'password' => $user->getPassword(),
                 'birthday' => $user->getBirthday(),
                 'establishment' => $user->getEstablishment()
+            ]);
+
+            echo $query->rowCount() . " records UPDATED successfully <br>";
+        } catch (PDOException $e) {
+            echo "Error: " . $e->getMessage(); 
+        }
+    }
+
+    public function banUser($id) {
+        try {
+            $db = config::getConnexion();
+            $query = $db->prepare(
+                'UPDATE users SET 
+                    ban= NOT ban
+                WHERE id = :id'
+            );
+
+            $query->execute([
+                'id' => $id,
+                
             ]);
 
             echo $query->rowCount() . " records UPDATED successfully <br>";

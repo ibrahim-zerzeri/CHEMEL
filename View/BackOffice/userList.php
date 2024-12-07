@@ -102,10 +102,12 @@ $list = $travelOfferC->listUsers();
                                      
                                                     <tr>
                                                         <th>ID</th>
+                                                        <th>Email</th>
                                                         <th>Username</th>
                                                         <th>password</th>
                                                         <th>birthday</th>
                                                         <th>establishment</th>
+                                                        <th>BANNED</th>
                                                         <th colspan="2">Actions</th>
                                                     </tr>
                                               
@@ -113,10 +115,12 @@ $list = $travelOfferC->listUsers();
         foreach ($list as $offer) {
         ?> <tr>
          <td><?= $offer['id']; ?></td>
+         <td><?= $offer['email']; ?></td>
             <td><?= $offer['username']; ?></td>
             <td><?= $offer['password']; ?></td>
             <td><?= $offer['birthday']; ?></td>
             <td><?= $offer['establishment']; ?></td>
+            <td><?= $offer['ban']; ?></td>
             <td align="center">
                 <form method="POST" action="updateuser.php">
                     <input type="submit" name="update" value="Update">

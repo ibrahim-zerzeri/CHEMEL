@@ -58,8 +58,15 @@ if (isset($_POST['signin']))
     if($checkUSER->rowCount()>0)
     {
     $checkUSER=$checkUSER->fetchObject();
+    if ($checkUSER->ban==1)
+    {
+        echo'<div class="alert alert-warning">ACCOUNT BANNED , CONTACT ADMINS </div>';
+
+    }
+    else {
     $_SESSION['user']=$checkUSER;
     header("location:homepage.php",true);
+}
 
 }
 else{

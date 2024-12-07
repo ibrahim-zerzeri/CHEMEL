@@ -235,10 +235,12 @@ John Abraham</h5>
                         <thead>
                             <tr>
                                 <th>ID</th>
+                                <th>Email</th>
                                 <th>Username</th>
                                 <th>Password</th>
                                 <th>Year of Birth</th>
                                 <th>Establishment</th>
+                                <th>BANNED</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -247,10 +249,12 @@ John Abraham</h5>
                             <?php foreach ($list as $offer): ?>
                                 <tr>
                                     <td><?php echo $offer['id']; ?></td>
+                                    <td><?php echo $offer['email']; ?></td>
                                     <td><?php echo $offer['username']; ?></td>
                                     <td><?php echo $offer['password']; ?></td>
                                     <td><?php echo $offer['birthday']; ?></td>
                                     <td><?php echo $offer['establishment']; ?></td>
+                                    <td><?php echo $offer['ban']; ?></td>
                                     <td align="center">
                                         <form method="POST" action="updateuser.php">
                                             <input class="btn btn-primary btn-sm" type="submit" name="update" value="Update">
@@ -259,6 +263,7 @@ John Abraham</h5>
                                     </td>
                                     <td>
                                         <a href="deleteuser.php?id=<?php echo $offer['id']; ?>" class="btn btn-danger btn-sm">Delete</a>
+                                        <a href="banuser.php?id=<?php echo $offer['id']; ?>" class="btn btn-danger btn-sm">BAN</a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
