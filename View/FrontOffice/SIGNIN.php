@@ -63,6 +63,8 @@ if (isset($_POST['signin']))
         echo'<div class="alert alert-warning">ACCOUNT BANNED , CONTACT ADMINS </div>';
 
     }
+     else if ($checkUSER->activation_token_hash!=NULL)
+     {echo'<div class="alert alert-warning">COMPLETE EMAIL VERIFICATION ! </div>';}
     else {
     $_SESSION['user']=$checkUSER;
     header("location:homepage.php",true);

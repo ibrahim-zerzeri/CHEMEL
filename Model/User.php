@@ -8,10 +8,11 @@ class User {
     private ?int $birthday;
     private ?string $establishment;
     private ?bool $ban;
+    private ?string $activation_token_hash;
     
 
     // Constructor
-    public function __construct(?int $id,?string $email, ?string $username, ?string $password, ?int $birthday, ?string $establishment) {
+    public function __construct(?int $id,?string $email, ?string $username, ?string $password, ?int $birthday, ?string $establishment,?string $activation_token_hash) {
         $this->id = $id;
         $this->email=$email;
         $this->username = $username;
@@ -19,6 +20,7 @@ class User {
         $this->birthday = $birthday;
         $this->establishment = $establishment;
         $this-> $ban=FALSE;
+        $this->activation_token_hash= $activation_token_hash;
         
     }
 
@@ -40,6 +42,13 @@ class User {
     
     public function setEmail(?string $email): void {
         $this->email = $email;
+    }
+    public function getToken(): ?string {
+        return $this->activation_token_hash;
+    }
+    
+    public function setToken(?string $activation_token_hash): void {
+        $this->activation_token_hash = $activation_token_hash;
     }
 
     public function setUsername(?string $username): void {

@@ -1,9 +1,16 @@
 <?php
 include '../../controller/UserController.php';
-
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'phpmailer/src/Exception.php';
+require 'phpmailer/src/PHPMailer.php';
+require 'phpmailer/src/SMTP.php';
 
 $error = "";
 $user = null;
+$activation_token= bin2hex(random_bytes(16));
+$activation_token_hash = hash ("sha256" , $activation_token);
+
 
 // Create an instance of the controller
 $pdo = config::getConnexion();
@@ -32,14 +39,32 @@ if (
             $_POST['username'],
             $_POST['password'],
             intval($_POST['birthday']),
-            $_POST['establishment']
+            $_POST['establishment'],
+            $activation_token_hash
         );
 
         // Add user
         $userController->addUser($user);
-
+       //Mailing
+       $mail = new PHPMailer(true);
+       $mail->isSMTP();
+       $mail->Host = 'smtp.gmail.com';
+       $mail->SMTPAuth = true;
+       $mail->Username = 'jihed.bakalti@gmail.com';
+       $mail->Password = 'rths pifw ifhf hjfk';
+       $mail->SMTPSecure = 'ssl';
+       $mail->Port = 465;
+       $mail->setFrom ('jihed.bakalti@gmail.com');
+       $mail->addAddress($_POST["email"]);
+       $mail->isHTML(true);
+       $mail->Subject = " account Verification";
+       $mail->Body = <<<END
+        Click <a href="http://localhost/test/CHEMEL/view/BackOffice/verification.php?token=$activation_token_hash">Here</a> to activate your account.  
+        END;
+       $mail->send();
+       echo '<script>alert("Email Verfication Sent, Check your Email!")</script>';
+       header('Location:../FrontOffice/SIGNIN.php');
         // Redirect to the user list page
-        header('Location:User-management.php');
     } else {
         $error = "Missing information";
     }

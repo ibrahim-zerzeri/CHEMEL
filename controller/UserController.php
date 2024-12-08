@@ -29,7 +29,7 @@ class UserController {
     
 
     public function addUser($user) {
-        $sql = "INSERT INTO users (email,username, password, birthday, establishment, ban) VALUES (:email, :username, :password, :birthday, :establishment,FALSE)";
+        $sql = "INSERT INTO users (email,username, password, birthday, establishment, ban,activation_token_hash) VALUES (:email, :username, :password, :birthday, :establishment,FALSE,:activation_token_hash)";
         $db = config::getConnexion();
         try {
             $query = $db->prepare($sql);
@@ -38,7 +38,8 @@ class UserController {
                 'username' => $user->getUsername(),
                 'password' => $user->getPassword(),
                 'birthday' => $user->getBirthday(),
-                'establishment' => $user->getEstablishment()
+                'establishment' => $user->getEstablishment(),
+                'activation_token_hash' => $user->getToken()
             ]);
         } catch (Exception $e) {
             echo 'Error: ' . $e->getMessage();
