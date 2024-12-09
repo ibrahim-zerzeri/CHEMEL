@@ -1,64 +1,51 @@
 <?php
-// Include the database configuration file
-include_once '../../config.php';
+// Include the required files
+include_once '../../Controller/ProductController.php';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Retrieve form data
-    $productName = $_POST['productName'];
-    $productCategory = $_POST['productCategory'];
-    $productPrice = $_POST['productPrice'];
-    $productQuantity = $_POST['productQuantity'];
-    $productDescription = $_POST['productDescription'];
+// Check if the request method is POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve form inputs and sanitize them
+    $productName = htmlspecialchars($_POST['productName']);
+    $productCategory = htmlspecialchars($_POST['productCategory']);
+    $productPrice = (float)$_POST['productPrice'];
+    $productQuantity = (int)$_POST['productQuantity'];
+    $productDescription = htmlspecialchars($_POST['productDescription']);
+    $productImage = isset($_FILES['productImage']) ? $_FILES['productImage'] : null;
 
-    // Handle file upload
-    if (isset($_FILES['productImage']) && $_FILES['productImage']['error'] == 0) {
-        // Get file details
-        $fileTmpPath = $_FILES['productImage']['tmp_name'];
-        $fileName = $_FILES['productImage']['name'];
-
-        // Define the target directory for the uploaded image (absolute path)
-        $uploadDir = $_SERVER['DOCUMENT_ROOT'] . '/CHEMEL/uploads/';
-        $filePath = $uploadDir . $fileName;
-
-        // Define the relative path to be stored in the database
-        $relativePath = '../../uploads/' . $fileName;
-
-        // Move the uploaded file to the target directory
-        if (move_uploaded_file($fileTmpPath, $filePath)) {
-            // File uploaded successfully
-            $imagePath = $relativePath; // Use the relative path
-        } else {
-            // Error uploading file
-            echo "Error uploading image.";
-            exit();
-        }
-    } else {
-        // Handle case where no image is uploaded
-        echo "Please upload an image.";
+    // Validate that required fields are filled
+    if (empty($productName) || empty($productCategory) || empty($productPrice) || empty($productQuantity) || empty($productDescription)) {
+        header("Location: products.php?error=Missing required fields");
         exit();
     }
 
-    // Connect to the database
-    $conn = config::getConnexion();
+    // Create a Product object (Note: The constructor requires arguments, so pass null for the non-required ones)
+    $product = new Product(
+        null, // ID (auto-incremented by the database)
+        $productName, 
+        $productCategory, 
+        $productPrice, 
+        $productQuantity, 
+        $productDescription, 
+        null, // Image path (set later after upload)
+        true  // is_shown (default is true, meaning product is visible)
+    );
 
-    // SQL query to insert product data into the database
-    $sql = "INSERT INTO product (PRODUCT_NAME, CATEGORY, PRICE, QUANTITY, DESCRIPTION, IMAGE_PATH) 
-            VALUES (:productName, :productCategory, :productPrice, :productQuantity, :productDescription, :imagePath)";
+    // Instantiate the ProductController
+    $productController = new ProductController();
 
-    // Prepare the statement
-    $stmt = $conn->prepare($sql);
-    $stmt->bindParam(':productName', $productName, PDO::PARAM_STR);
-    $stmt->bindParam(':productCategory', $productCategory, PDO::PARAM_STR);
-    $stmt->bindParam(':productPrice', $productPrice, PDO::PARAM_STR);
-    $stmt->bindParam(':productQuantity', $productQuantity, PDO::PARAM_INT);
-    $stmt->bindParam(':productDescription', $productDescription, PDO::PARAM_STR);
-    $stmt->bindParam(':imagePath', $imagePath, PDO::PARAM_STR);
-
-    // Execute the query
-    if ($stmt->execute()) {
-        echo "<script>alert('Product added successfully!'); window.location.href='products.php';</script>";
-    } else {
-        echo "Error: Could not add product.";
+    // Call the addProduct method
+    try {
+        // Call the controller method to add the product
+        $productController->addProduct($product, $productImage);
+        // Redirect to products page with success message
+        header("Location: products.php?success=Product added successfully");
+        exit();
+    } catch (Exception $e) {
+        // Redirect with an error message if something goes wrong
+        header("Location: products.php?error=" . urlencode('Error adding product: ' . $e->getMessage()));
+        exit();
     }
+} else {
+    echo "Error: Invalid request method.";
 }
 ?>

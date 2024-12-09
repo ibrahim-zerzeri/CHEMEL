@@ -8,9 +8,19 @@ class Product {
     private ?int $quantity;
     private ?string $description;
     private ?string $image_path;
+    private ?bool $is_shown;
 
-    // Constructor
-    public function __construct(?int $id, ?string $product_name, ?string $category, ?float $price, ?int $quantity, ?string $description, ?string $image_path) {
+    // **Constructor**
+    public function __construct(
+        ?int $id = null, 
+        ?string $product_name = null, 
+        ?string $category = null, 
+        ?float $price = null, 
+        ?int $quantity = null, 
+        ?string $description = null, 
+        ?string $image_path = null, 
+        ?bool $is_shown = true
+    ) {
         $this->id = $id;
         $this->product_name = $product_name;
         $this->category = $category;
@@ -18,9 +28,10 @@ class Product {
         $this->quantity = $quantity;
         $this->description = $description;
         $this->image_path = $image_path;
+        $this->is_shown = $is_shown;
     }
 
-    // Getters and Setters
+    // **Getters and Setters**
     public function getId(): ?int {
         return $this->id;
     }
@@ -76,6 +87,14 @@ class Product {
     public function setImagePath(?string $image_path): void {
         $this->image_path = $image_path;
     }
-}
+
+    public function setIsShown(?bool $is_shown): void {
+        $this->is_shown = $is_shown;
+    }
+
+    public function getIsShown(): ?bool {
+        return $this->is_shown;
+    }  
+} 
 
 ?>

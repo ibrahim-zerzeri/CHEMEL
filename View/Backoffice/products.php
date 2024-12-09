@@ -7,11 +7,8 @@ include '../../Controller/ProductController.php';
 
 
 // Fetch all products from the database to display in the table
-$conn = config::getConnexion(); // Get the PDO connection
-$sql = "SELECT * FROM product";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$products = $stmt->fetchAll();
+$pController = new ProductController();
+$products = $pController->listProducts();
 ?>
 
 
@@ -161,18 +158,18 @@ John Abraham</h5>
 
                     <!-- Marketplace Menu -->
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'orders.php') ? 'active' : ''; ?>" 
-                           href="#" data-toggle="collapse" aria-expanded="<?php echo ($currentPage === 'products.php' || $currentPage === 'orders.php') ? 'true' : 'false'; ?>" 
+                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'active' : ''; ?>" 
+                           href="#" data-toggle="collapse" aria-expanded="<?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'true' : 'false'; ?>" 
                            data-target="#submenu-marketplace" aria-controls="submenu-marketplace">
                             <i class="fa fa-fw fa-rocket"></i>Marketplace
                         </a>
-                        <div id="submenu-marketplace" class="collapse submenu <?php echo ($currentPage === 'products.php' || $currentPage === 'orders.php') ? 'show' : ''; ?>">
+                        <div id="submenu-marketplace" class="collapse submenu <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'show' : ''; ?>">
                             <ul class="nav flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link <?php echo ($currentPage === 'products.php') ? 'active' : ''; ?>" href="products.php">Products</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo ($currentPage === 'orders.php') ? 'active' : ''; ?>" href="orders.php">Orders</a>
+                                    <a class="nav-link <?php echo ($currentPage === 'basket.php') ? 'active' : ''; ?>" href="basket.php">Baskets</a>
                                 </li>
                             </ul>
                         </div>
@@ -290,6 +287,7 @@ John Abraham</h5>
                                 <th>Quantity</th>
                                 <th>Product Image</th>
                                 <th>Description</th>
+                                <th>Is_Shown</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -301,11 +299,14 @@ John Abraham</h5>
             <td><?php echo $product['CATEGORY']; ?></td>
             <td><?php echo $product['PRICE']; ?> DT</td>
             <td><?php echo $product['QUANTITY']; ?></td>
-            <td><img src="<?php echo $product['IMAGE_PATH']; ?>" alt="img" width="50" height="50"></td>
+            <td><img src="../../uploads/<?php echo $product['IMAGE_PATH']; ?>" alt="Product Image" width="50" height="50"></td>
             <td><?php echo $product['DESCRIPTION']; ?></td>
+            <td><?php echo $product['IS_SHOWN'] ? 'True' : 'False'; ?></td>
             <td>
                 <!-- Edit Button -->
                 <a href="editProduct.php?id=<?php echo $product['ID']; ?>" class="btn btn-primary btn-sm">Edit</a>
+
+
                 
                 <!-- Delete Button with Form -->
                 <form method="POST" action="deleteProduct.php" style="display:inline;">

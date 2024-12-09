@@ -1,30 +1,24 @@
 <?php
-// Use include_once to ensure the file is included only once
-include_once '../../config.php';
+// Include the required files
+include_once '../../Controller/ProductController.php';
 
-// Check if the ID is passed via POST
-if (isset($_POST['id'])) {
-    $product_id = $_POST['id'];
+// Check if the request method is POST and if the product ID is provided
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['id'])) {
+    $product_id = (int)$_POST['id']; // Ensure ID is an integer
 
-    // Create a PDO connection
-    $conn = config::getConnexion();
+    // Instantiate the ProductController
+    $productController = new ProductController();
 
-    // SQL query to delete the product from the database
-    $sql = "DELETE FROM product WHERE ID = :id";
-    $stmt = $conn->prepare($sql);
-
-    // Bind the product ID parameter
-    $stmt->bindParam(':id', $product_id, PDO::PARAM_INT);
-
-    // Execute the query and check if the product was deleted
-    if ($stmt->execute()) {
-        // Redirect to the products list after deletion
-        header("Location: products.php");
+    // Call the deleteProduct method from ProductController
+    if ($productController->deleteProduct($product_id)) {
+        // Redirect to the products list after successful deletion
+        header("Location: products.php?success=1");
         exit();
     } else {
-        echo "Error: Could not delete product.";
+        // Include the product ID in the URL for debugging
+        header("Location: products.php?error=1&id=" . $product_id);
+        exit();
     }
 } else {
     echo "Error: No product ID provided.";
 }
-?>

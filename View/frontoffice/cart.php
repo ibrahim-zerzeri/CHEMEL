@@ -1,20 +1,27 @@
 <?php
 session_start();
-include '../../Controller/ProductController.php';
+
 include '../../Controller/BasketController.php';
 
 $productC = new ProductController();
-$liste = $productC->listBasket();
+
 $basket_contents = new BasketController();
-$totalQuantity=$basket_contents->getTotalQuantity();
+
 $totalAmount = 0;
-if (isset($_SESSION['basket_id'])) {
+if (isset($_SESSION['basket_id']) && isset($_SESSION['totalQuantity'])) {
+  $totalQuantity = $_SESSION['totalQuantity'];
   $basketId = $_SESSION['basket_id'];
+ 
   // Now you can use $basketId to fetch the cart contents, etc.
 } else {
   // Handle the case where basket_id is not in the session
   echo "Basket ID not found.";
 }
+$totalQuantity=$basket_contents->getTotalQuantity($basketId);
+$liste = $basket_contents->getBasketContents($basketId);
+
+
+
 
 
 
@@ -112,7 +119,7 @@ if (isset($_SESSION['basket_id'])) {
 <?php
 foreach ($liste as $product):
     // Get the quantity from the basket
-    $quantity = $basket_contents->getProductQuantity($product['ID']);
+    $quantity = $basket_contents->getProductQuantity($product['ID'],$basketId);
 
     // Only display the product if the quantity is greater than 0
     if ($quantity > 0):
@@ -123,7 +130,7 @@ foreach ($liste as $product):
        </td>
         
         <td class="image-prod">
-          <div class="img" style="background-image:url('<?php echo $product['IMAGE_PATH']; ?>');"></div>
+          <div class="img" style="background-image:url('<?php echo "../".$product['IMAGE_PATH']; ?>');"> </div>
         </td>
         
 		<td class="product-name">
@@ -267,42 +274,7 @@ foreach ($liste as $product):
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
 
-  <script>
-		$(document).ready(function(){
-
-		var quantitiy=0;
-		   $('.quantity-right-plus').click(function(e){
-		        
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		            
-		            $('#quantity').val(quantity + 1);
-
-		          
-		            // Increment
-		        
-		    });
-
-		     $('.quantity-left-minus').click(function(e){
-		        // Stop acting like a button
-		        e.preventDefault();
-		        // Get the field name
-		        var quantity = parseInt($('#quantity').val());
-		        
-		        // If is not undefined
-		      
-		            // Increment
-		            if(quantity>0){
-		            $('#quantity').val(quantity - 1);
-		            }
-		    });
-		    
-		});
-	</script>
+  
     
   </body>
 </html>

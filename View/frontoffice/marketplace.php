@@ -1,109 +1,43 @@
 <?php
 session_start(); // Start session to manage cart data
-include_once '../../config.php'; // Adjust path based on your folder structure
+include_once '../../Controller/BasketController.php';
 
-$conn = config::getConnexion();
+// Initialize the controllers
+$productController = new ProductController();
+$basketController = new BasketController();
 
-try {
-  // Query to count the total quantities
-  $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
-  $query = $conn->prepare($sql);
-  $query->execute();
-  $result = $query->fetch(PDO::FETCH_ASSOC);
+// Get the list of products from the database
+$products = $productController->listProducts();
 
-  // Store the total quantity in a variable
-  $totalQuantity = $result['total_quantity'];
-} catch (Exception $e) {
-  echo 'Error: ' . $e->getMessage();
+// Handle the "Add to Cart" action
+
+
+// Get the total quantity of products in the cart
+if (isset($_SESSION['basket_id']) && isset($_SESSION['totalQuantity'])) {
+  $totalQuantity = $_SESSION['totalQuantity'];
+  $basketId = $_SESSION['basket_id'];
+  // Now you can use $basketId to fetch the cart contents, etc.
+} else {
+  // Handle the case where basket_id is not in the session
+  echo "Basket ID not found.";
 }
-// Fetch products for display
-$sql = "SELECT * FROM product";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$products = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// Handle "Add to Cart" submission
 if (isset($_POST['add_to_cart'])) {
-    $productId = $_POST['product_id'];
-    $quantity = $_POST['quantity'];
+  $productId = $_POST['product_id'];
+  $quantity = $_POST['quantity'];
+  $produit=$productController->getProductById($productId);
+  $quantite_disponible=$produit['QUANTITY'];
+  if ($quantity > $quantite_disponible) {
+    echo "<script>alert('Quantity not available');</script>";
 
-    // Fetch product details from the database
-    $productQuery = $conn->prepare("SELECT * FROM product WHERE ID = :id");
-    $productQuery->execute(['id' => $productId]);
-    $product = $productQuery->fetch(PDO::FETCH_ASSOC);
+  }else{
+    $basketController->addProductToBasket($basketId,$productId, $quantity);
+    $productController->UpdateProductQuantity($productId, $quantite_disponible-$quantity);
+  }
+  // Add the product to the basket
 
-    if ($product) {
-        // Step 1: Identify or Create a Basket for the Session
-        if (!isset($_SESSION['basket_id'])) {
-            // Create a new basket if none exists
-            $createBasketQuery = $conn->prepare("INSERT INTO basket () VALUES ()");
-            $createBasketQuery->execute();
-            $_SESSION['basket_id'] = $conn->lastInsertId(); // Store the basket ID in the session
-        }
-        $basketId = $_SESSION['basket_id'];
-
-        // Step 2: Add or Update the Product in the Basket
-        $basketProductQuery = $conn->prepare("
-            SELECT * FROM basket_products WHERE basket_id = :basket_id AND product_id = :product_id
-        ");
-        $basketProductQuery->execute([
-            'basket_id' => $basketId,
-            'product_id' => $productId
-        ]);
-        $existingProduct = $basketProductQuery->fetch(PDO::FETCH_ASSOC);
-
-        if ($existingProduct) {
-            // Update quantity if the product is already in the basket
-            $updateBasketProductQuery = $conn->prepare("
-                UPDATE basket_products 
-                SET quantity = quantity + :quantity 
-                WHERE basket_id = :basket_id AND product_id = :product_id
-            ");
-            $updateBasketProductQuery->execute([
-                'quantity' => $quantity,
-                'basket_id' => $basketId,
-                'product_id' => $productId
-            ]);
-        } else {
-            // Insert new product into the basket
-            $insertBasketProductQuery = $conn->prepare("
-                INSERT INTO basket_products (basket_id, product_id, quantity)
-                VALUES (:basket_id, :product_id, :quantity)
-            ");
-            $insertBasketProductQuery->execute([
-                'basket_id' => $basketId,
-                'product_id' => $productId,
-                'quantity' => $quantity
-            ]);
-        }
-
-        // Step 3: Update the Session Cart (Optional, for UI purposes)
-        if (!isset($_SESSION['cart'])) {
-            $_SESSION['cart'] = [];
-        }
-        if (isset($_SESSION['cart'][$productId])) {
-            $_SESSION['cart'][$productId]['quantity'] += $quantity;
-        } else {
-            $_SESSION['cart'][$productId] = [
-              'product_name' => $product['product_name'],
-              'category' => $product['category'],
-              'description' => $product['description'],
-              'price' => $product['price'],
-              'quantity' => $quantity,
-              'image_path' => $product['image_path']
-            ];
-        }
-        
-
-        // Redirect or display a success message
-        header("Location: marketplace.php?success=1");
-        exit();
-    } else {
-        // Handle product not found error
-        header("Location: marketplace.php?error=Product not found");
-        exit();
-    }
 }
+$totalQuantity=$basketController->getTotalQuantity($basketId);
+
 ?>
 
 
@@ -167,8 +101,8 @@ if (isset($_POST['add_to_cart'])) {
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
           <div class="col-md-9 ftco-animate text-center">
-          	<p class="breadcrumbs"><span class="mr-2"><a href="index.php">Home</a></span> <span>Shop</span></p>
-            <h1 class="mb-0 bread">Shop</h1>
+          	<p class="breadcrumbs"><span class="mr-2"><a href="index.php">Welcome</a></span> </p>
+            <h1 class="mb-0 bread">To the marketplace</h1>
           </div>
         </div>
       </div>
@@ -176,114 +110,57 @@ if (isset($_POST['add_to_cart'])) {
 
 	<section class="ftco-section bg-light">
     <div class="container">
-        <div class="row">
-            <!-- Sidebar Section -->
-            <div class="col-lg-3 col-md-4">
-                <div class="sidebar">
-                    <div class="sidebar-box-2">
-                        <h2 class="heading">Categories</h2>
-                        <div class="fancy-collapse-panel">
-                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" role="tab" id="headingOne">
-                                        <h4 class="panel-title">
-                                            <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">Men's Shoes</a>
-                                        </h4>
-                                    </div>
-                                    <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                        <div class="panel-body">
-                                            <ul>
-                                                <li><a href="#">Sport</a></li>
-                                                <li><a href="#">Casual</a></li>
-                                                <li><a href="#">Running</a></li>
-                                                <li><a href="#">Jordan</a></li>
-                                                <li><a href="#">Soccer</a></li>
-                                                <li><a href="#">Football</a></li>
-                                                <li><a href="#">Lifestyle</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Additional panels for other categories -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="sidebar-box-2">
-                        <h2 class="heading">Price Range</h2>
-                        <form method="post" class="colorlib-form-2">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="guests">Price from:</label>
-                                        <div class="form-field">
-                                            <i class="icon icon-arrow-down3"></i>
-                                            <select name="price_from" class="form-control">
-                                                <option value="1">1</option>
-                                                <option value="200">200</option>
-                                                <option value="300">300</option>
-                                                <option value="400">400</option>
-                                                <option value="1000">1000</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <div class="form-group">
-                                        <label for="guests">Price to:</label>
-                                        <div class="form-field">
-                                            <i class="icon icon-arrow-down3"></i>
-                                            <select name="price_to" class="form-control">
-                                                <option value="2000">2000</option>
-                                                <option value="4000">4000</option>
-                                                <option value="6000">6000</option>
-                                                <option value="8000">8000</option>
-                                                <option value="10000">10000</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
+       
 
             <!-- Products Section -->
             <div class="col-lg-9 col-md-8">
                 <div class="row">
-                <?php foreach ($products as $product): ?>
-    <div class="col-sm-12 col-md-6 col-lg-4 ftco-animate d-flex">
-        <div class="product d-flex flex-column">
-            <!-- Product Image -->
-            <a href="#" class="img-prod">
-                <img class="product-img" src="<?= htmlspecialchars($product['IMAGE_PATH']) ?>" alt="<?= htmlspecialchars($product['PRODUCT_NAME']) ?>">
-                <div class="overlay"></div>
-            </a>
-            <!-- Product Details -->
-            <div class="text py-3 pb-4 px-3">
-                <div class="d-flex">
-                    <div class="cat">
-                        <span><?= htmlspecialchars($product['CATEGORY']) ?></span>
+                <div class="container my-5">
+    <!-- Search Bar -->
+    <input type="text" id="searchBar" placeholder="Search for products..." class="form-control my-4">
+    
+    <!-- Products Container -->
+    <div id="productsContainer" class="row">
+        <?php foreach ($products as $product): 
+            if($product['IS_SHOWN'] == 1): ?>
+            <div class="col-sm-12 col-md-6 col-lg-4 ftco-animate d-flex product-item" 
+                data-name="<?= htmlspecialchars($product['PRODUCT_NAME']) ?>" 
+                data-category="<?= htmlspecialchars($product['CATEGORY']) ?>">
+                <div class="product d-flex flex-column">
+                    <!-- Product Image -->
+                    <a href="#" class="img-prod">
+                        <img class="product-img img-fluid" src="../<?= htmlspecialchars($product['IMAGE_PATH']) ?>" alt="<?= htmlspecialchars($product['PRODUCT_NAME']) ?>">
+                        <div class="overlay"></div>
+                    </a>
+                    <!-- Product Details -->
+                    <div class="text py-3 pb-4 px-3">
+                        <div class="d-flex">
+                            <div class="cat">
+                                <span><?= htmlspecialchars($product['CATEGORY']) ?></span>
+                            </div>
+                        </div>
+                        <h3><a href="#"><?= htmlspecialchars($product['PRODUCT_NAME']) ?></a></h3>
+                        <h3 style="color:red;"><?= $product['QUANTITY'] == 0 ? "Out of stock" : "" ?></h3>
+                        <div class="pricing">
+                            <p class="price"><span><?= htmlspecialchars($product['PRICE']) ?> DT</span></p>
+                        </div>
+                        <p class="bottom-area d-flex px-3">
+                            <form action="marketplace.php" method="POST">
+                                <input type="hidden" name="product_id" value="<?= $product['ID'] ?>">
+                                <input type="number" name="quantity" value="1" min="1" class="form-control w-25" required>
+                                <button type="submit" name="add_to_cart" class="add-to-cart text-center py-2 mr-1">
+                                    <span>Add to cart <i class="ion-ios-add ml-1"></i></span>
+                                </button>
+                            </form>
+                        </p>
                     </div>
                 </div>
-                <h3><a href="#"><?= htmlspecialchars($product['PRODUCT_NAME']) ?></a></h3>
-                <div class="pricing">
-                    <p class="price"><span><?= htmlspecialchars($product['PRICE']) ?> DT</span></p>
-                </div>
-                <p class="bottom-area d-flex px-3">
-                    <form action="marketplace.php" method="POST">
-                        <input type="hidden" name="product_id" value="<?= $product['ID'] ?>">
-                        <input type="number" name="quantity" value="1" min="1" class="form-control w-25" required>
-                        <button type="submit" name="add_to_cart" class="add-to-cart text-center py-2 mr-1">
-                            <span>Add to cart <i class="ion-ios-add ml-1"></i></span>
-                        </button>
-                    </form>
-                </p>
             </div>
-        </div>
+        <?php 
+            endif; 
+        endforeach; ?>
     </div>
-<?php endforeach; ?>
+</div>
                 </div>
             </div>
         </div>
@@ -444,6 +321,38 @@ if (isset($_POST['add_to_cart'])) {
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
   <script src="js/google-map.js"></script>
   <script src="js/main.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+  <script>
+    //Search bar dynamic
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchBar = document.getElementById('searchBar');
+        const products = document.querySelectorAll('.product-item');
+
+        searchBar.addEventListener('keyup', function () {
+            const query = searchBar.value.toLowerCase();
+
+            products.forEach(product => {
+                const productName = product.dataset.name.toLowerCase();
+                const productCategory = product.dataset.category.toLowerCase();
+
+                if (productName.includes(query) || productCategory.includes(query)) {
+                  product.style.setProperty('display', 'flex', 'important');
+
+                } else {
+                  product.style.setProperty('display', 'none', 'important');
+
+                }
+                
+            });
+        });
+    });
+  //End search bar dynamic
+
+  //Categories filtering
+
+  //End Categories filtering
+</script>
     
   </body>
 </html>

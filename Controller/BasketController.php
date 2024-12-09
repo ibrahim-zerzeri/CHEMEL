@@ -1,5 +1,50 @@
 <?php
+ // Include the database configuration
+
+include(__DIR__ . '/../Model/Basket.php');
+include(__DIR__ . '/../Model/BasketProducts.php');
+include(__DIR__ . '/../Controller/ProductController.php');
 class BasketController {
+
+    public function deleteBasket($id) {
+        $sql = "DELETE FROM basket WHERE ID = :id";  // Ensure the correct column name
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute(['id' => $id]);
+    
+            // Check if any row was deleted
+            if ($query->rowCount() > 0) {
+                return true;  // Successfully deleted
+            } else {
+                return false; // No rows were deleted (basket not found)
+            }
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+    
+    public function listBaskets(): array {
+        $sql = "SELECT * FROM basket";  // Ensure the correct table and columns
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute();
+    
+            // Fetch baskets as an object array
+            $baskets = $query->fetchAll(PDO::FETCH_ASSOC);
+    
+            // Return empty array if no baskets found
+            if (!$baskets) {
+                return [];
+            }
+    
+            return $baskets;
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+    
     // Create a new basket and return its ID
     public function createBasket(): int {
         $sql = "INSERT INTO basket () VALUES ()";
@@ -13,9 +58,9 @@ class BasketController {
     }
 
 
-    public function getTotalQuantity()
+    public function getTotalQuantity(int $basketId): int
 {
-    $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products";
+    $sql = "SELECT SUM(quantity) AS total_quantity FROM basket_products where basket_id = $basketId";
     $db = config::getConnexion();
     try {
         $query = $db->prepare($sql);
@@ -27,21 +72,28 @@ class BasketController {
         die('Error: ' . $e->getMessage());
     }
 }
-    public function getProductQuantity(int $productId): int {
-        $sql = "SELECT quantity FROM basket_products WHERE product_id = :product_id";
-        $db = config::getConnexion();
-        try {
-            $query = $db->prepare($sql);
-            $query->execute(['product_id' => $productId]);
-            $result = $query->fetch();
+public function getProductQuantity(int $productId, int $basketId): int 
+{
+    $sql = "SELECT quantity FROM basket_products WHERE product_id = :product_id AND basket_id = :basket_id";
+    $db = config::getConnexion();
     
-            // If no record is found, return 0
-            return $result ? (int)$result['quantity'] : 0;
-        } catch (Exception $e) {
-            die('Error: ' . $e->getMessage());
-        }
+    try {
+        $query = $db->prepare($sql);
+        // Pass both parameters together in one execute call
+        $query->execute([
+            'product_id' => $productId,
+            'basket_id' => $basketId
+        ]);
+        
+        $result = $query->fetch();
+        
+        // If no record is found, return 0
+        return $result ? (int)$result['quantity'] : 0;
+    } catch (Exception $e) {
+        die('Error: ' . $e->getMessage());
     }
-    
+}
+
    
 
     public function getBasketProduct()
