@@ -51,7 +51,7 @@ if (
        $mail->Host = 'smtp.gmail.com';
        $mail->SMTPAuth = true;
        $mail->Username = 'jihed.bakalti@gmail.com';
-       $mail->Password = 'rths pifw ifhf hjfk';
+       $mail->Password = ''; //T7OT el APP code te3ek
        $mail->SMTPSecure = 'ssl';
        $mail->Port = 465;
        $mail->setFrom ('jihed.bakalti@gmail.com');
