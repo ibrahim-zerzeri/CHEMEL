@@ -45,7 +45,7 @@ $totalAmount = 0;
                         <div class="card">
                             <h5 class="card-header">Basket Products</h5>
                             <div class="card-body">
-                                <form method="POST" action="../../Controller/BasketController.php" enctype="multipart/form-data">
+                           
                                     <input type="hidden" name="basket_id" value="<?php echo htmlspecialchars($basket_id); ?>">
 
                                     <!-- Display the products in the basket -->
@@ -87,7 +87,7 @@ $totalAmount = 0;
                                     <?php else: ?>
                                         <p>No products found in this basket.</p>
                                     <?php endif; ?>
-                                </form>
+                                
                             </div>
                         </div>
                     </div>

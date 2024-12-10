@@ -25,6 +25,13 @@ $products = $pController->listProducts();
     <link href="./assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
     <link rel="stylesheet" href="./assets/libs/css/style.css">
     <link rel="stylesheet" href="./assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <style>
+        .error-message {
+            color: red;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 
 <body>
@@ -236,34 +243,51 @@ John Abraham</h5>
                             <div class="card-body">
                             <form id="productForm" enctype="multipart/form-data" method="POST" action="addProduct.php">
     <div class="form-row">
+        <!-- Champ Nom du produit -->
         <div class="form-group col-md-4">
-            <label for="productName">Product Name</label>
-            <input type="text" class="form-control" id="productName" name="productName" required>
+            <label for="productName">Product name</label>
+            <input type="text" class="form-control" id="productName" name="productName" >
+            <p class="error-message" id="errorProductName"></p>
         </div>
+
+        <!-- Champ Catégorie -->
         <div class="form-group col-md-4">
             <label for="productCategory">Category</label>
-            <input type="text" class="form-control" id="productCategory" name="productCategory" required>
+            <input type="text" class="form-control" id="productCategory" name="productCategory" >
+            <p class="error-message" id="errorProductCategory"></p>
         </div>
+
+        <!-- Champ Prix -->
         <div class="form-group col-md-4">
             <label for="productPrice">Price</label>
-            <input type="number" class="form-control" id="productPrice" name="productPrice" required>
+            <input type="float" class="form-control" id="productPrice" name="productPrice" >
+            <p class="error-message" id="errorProductPrice"></p>
         </div>
     </div>
+
     <div class="form-row">
+        <!-- Champ Quantité -->
         <div class="form-group col-md-4">
             <label for="productQuantity">Quantity</label>
-            <input type="number" class="form-control" id="productQuantity" name="productQuantity" required>
+            <input type="number" class="form-control" id="productQuantity" name="productQuantity" >
+            <p class="error-message" id="errorProductQuantity"></p>
         </div>
+
+        <!-- Champ Image -->
         <div class="form-group col-md-4">
             <label for="productImage">Product Image</label>
             <input type="file" class="form-control" id="productImage" name="productImage" accept="image/*" >
         </div>
+
+        <!-- Champ Description -->
         <div class="form-group col-md-4">
             <label for="productDescription">Description</label>
-            <textarea class="form-control" id="productDescription" name="productDescription" rows="2" required></textarea>
+            <textarea class="form-control" id="productDescription" name="productDescription" rows="2"></textarea>
+            <p class="error-message" id="errorProductDescription"></p>
         </div>
     </div>
-    <button type="submit" class="btn btn-primary">Add Product</button>
+
+    <button type="submit" class="btn btn-primary">Add the product</button>
 </form>
                             </div>
                         </div>
@@ -332,5 +356,74 @@ John Abraham</h5>
     <!-- Optional JavaScript -->
     <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
     <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
-    <script>
+ 
+        <script>
+    // Sélectionner les champs du formulaire
+    const productNameInput = document.getElementById('productName');
+    const productCategoryInput = document.getElementById('productCategory');
+    const productPriceInput = document.getElementById('productPrice');
+    const productQuantityInput = document.getElementById('productQuantity');
+    const productDescriptionInput = document.getElementById('productDescription');
+
+    // Messages d'erreur
+    const errorProductName = document.getElementById('errorProductName');
+    const errorProductCategory = document.getElementById('errorProductCategory');
+    const errorProductPrice = document.getElementById('errorProductPrice');
+    const errorProductQuantity = document.getElementById('errorProductQuantity');
+    const errorProductDescription = document.getElementById('errorProductDescription');
+
+    // Fonction pour vérifier si le champ est alphanumérique
+    function isAlphaNumeric(value) {
+        const regex = /^[a-zA-Z0-9 ]+$/;
+        return regex.test(value);
+    }
+
+    // Contrôle de saisie pour les champs textuels
+    function validateTextInput(inputElement, errorElement) {
+        if (!isAlphaNumeric(inputElement.value)) {
+            errorElement.textContent = 'Ce champ doit être alphanumérique (lettres et chiffres uniquement).';
+        } else {
+            errorElement.textContent = '';
+        }
+    }
+
+    // Contrôle de saisie pour les champs de prix et quantité
+    function validatePositiveNumberInput(inputElement, errorElement) {
+        const value = parseFloat(inputElement.value);
+        if (isNaN(value) || value <= 0) {
+            errorElement.textContent = 'Veuillez saisir un nombre positif.';
+        } else {
+            errorElement.textContent = '';
+        }
+    }
+
+    // Écoute des événements "input" (en temps réel) sur les champs
+    productNameInput.addEventListener('input', () => validateTextInput(productNameInput, errorProductName));
+    productCategoryInput.addEventListener('input', () => validateTextInput(productCategoryInput, errorProductCategory));
+    productPriceInput.addEventListener('input', () => validatePositiveNumberInput(productPriceInput, errorProductPrice));
+    productQuantityInput.addEventListener('input', () => validatePositiveNumberInput(productQuantityInput, errorProductQuantity));
+    productDescriptionInput.addEventListener('input', () => validateTextInput(productDescriptionInput, errorProductDescription));
+
+    // Événement sur la soumission du formulaire
+    document.getElementById('productForm').addEventListener('submit', function(event) {
+        // Valider tous les champs avant la soumission
+        validateTextInput(productNameInput, errorProductName);
+        validateTextInput(productCategoryInput, errorProductCategory);
+        validatePositiveNumberInput(productPriceInput, errorProductPrice);
+        validatePositiveNumberInput(productQuantityInput, errorProductQuantity);
+        validateTextInput(productDescriptionInput, errorProductDescription);
+
+        // Empêcher la soumission si des erreurs sont présentes
+        if (
+            errorProductName.textContent !== '' ||
+            errorProductCategory.textContent !== '' ||
+            errorProductPrice.textContent !== '' ||
+            errorProductQuantity.textContent !== '' ||
+            errorProductDescription.textContent !== ''
+        ) {
+            event.preventDefault();
+            alert('Veuillez corriger les erreurs avant de soumettre le formulaire.');
+        }
+    });
+</script>
         

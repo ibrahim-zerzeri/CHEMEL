@@ -273,5 +273,38 @@ public function deleteProduct($product_id)
             echo 'Error: ' . $e->getMessage();
         }
     }
+    public function getProducts($limit, $offset)
+{
+    $sql = "SELECT * FROM product WHERE IS_SHOWN = 1 LIMIT :limit OFFSET :offset";
+    $db = config::getConnexion();
+    $query = $db->prepare($sql);
+    $query->bindParam(':limit', $limit, PDO::PARAM_INT);
+    $query->bindParam(':offset', $offset, PDO::PARAM_INT);
+    $query->execute();
+    return $query->fetchAll();
 }
+
+// Method to get total products
+public function getTotalProducts()
+{
+    $sql = "SELECT COUNT(*) AS total FROM product WHERE IS_SHOWN = 1";
+    $db = config::getConnexion();
+    $query = $db->prepare($sql);
+    $query->execute();
+    $result = $query->fetch();
+    return $result['total'];
+}
+
+public function getAllProducts()
+{
+    $sql = "SELECT * FROM product WHERE IS_SHOWN = 1";
+    $db = config::getConnexion();
+    $query = $db->prepare($sql);
+    $query->execute();
+    return $query->fetchAll();
+}
+
+}
+
+
 ?>

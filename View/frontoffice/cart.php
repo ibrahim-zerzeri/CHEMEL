@@ -141,9 +141,8 @@ foreach ($liste as $product):
         <td class="price"><?php echo number_format($product['PRICE'], 2); ?>DT</td>
         
         <td class="quantity">
-          <div class="input-group mb-3">
-            <input type="number" name="quantity" class="quantity form-control input-number" value="<?php echo $quantity; ?>" min="1" max="100">
-          </div>
+        <?php echo $quantity; ?>
+         
         </td>
         
         <td class="total"><?php echo number_format($product['PRICE'] * $quantity, 2); ?>DT</td>
