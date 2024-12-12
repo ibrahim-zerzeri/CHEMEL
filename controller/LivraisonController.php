@@ -28,7 +28,7 @@
         
                 if ($order && isset($order['id'])) {
                     $idP = $order['id'];
-                    $status = 'not yet'; // Statut par défaut
+                    $status = 'Not yet'; // Statut par défaut
         
                     // Insérer une nouvelle livraison
                     $queryLivraison = "INSERT INTO livraison (idP, status) VALUES (:idP, :status)";

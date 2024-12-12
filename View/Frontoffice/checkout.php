@@ -46,7 +46,7 @@ if (
         } catch (Exception $e) {
             $error = "Erreur lors de l'ajout de la commande: " . $e->getMessage();
         }
-        header('Location: ipay.php');
+        header('Location: ipay.html ');
     } else {
         $error = "Tous les champs sont requis.";
     }

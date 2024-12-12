@@ -82,8 +82,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <label for="status">Statut :</label><br>
                     <select class="form-control" id="status" name="status" required>
-                        <option value="not yet" <?php echo $status === 'not yet' ? 'selected' : ''; ?>>Not Yet</option>
-                        <option value="delivered" <?php echo $status === 'delivered' ? 'selected' : ''; ?>>Delivered</option>
+                        <option value="Not yet" <?php echo $status === 'Not yet' ? 'selected' : ''; ?>>Not Yet</option>
+                        <option value="Delivered" <?php echo $status === 'Delivered' ? 'selected' : ''; ?>>Delivered</option>
                     </select><br>
 
                     <button type="submit" class="btn btn-primary btn-block">Mettre à jour la Livraison</button>
