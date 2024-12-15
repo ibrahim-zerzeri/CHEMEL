@@ -46,8 +46,8 @@ class BasketController {
     }
     
     // Create a new basket and return its ID
-    public function createBasket(): int {
-        $sql = "INSERT INTO basket () VALUES ()";
+    public function createBasket(int $user_id): int {
+        $sql = "INSERT INTO basket (user_id) VALUES ($user_id)";
         $db = config::getConnexion();
         try {
             $db->exec($sql);
@@ -56,6 +56,31 @@ class BasketController {
             die('Error: ' . $e->getMessage());
         }
     }
+
+    public function getLatestBasketForUser($user_id) {
+        $sql = "SELECT b.id 
+                FROM basket b
+                JOIN users u ON b.user_id = u.id 
+                WHERE b.user_id = :user_id 
+                ORDER BY b.id DESC 
+                LIMIT 1";
+        
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute(['user_id' => $user_id]);
+            
+            // Fetch only the 'id' column from the result
+            $result = $query->fetch(PDO::FETCH_ASSOC);
+            
+            // Return the 'id' of the basket, or null if not found
+            return $result ? $result['id'] : null;
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+    
+    
 
 
     public function getTotalQuantity(int $basketId): int
@@ -108,6 +133,27 @@ public function getProductQuantity(int $productId, int $basketId): int
             die('Error: ' . $e->getMessage());
         }
     }
+
+    public function getBasketById($user_id): ?int {
+        $sql = "SELECT id 
+                FROM basket 
+                WHERE user_id = :user_id 
+                ORDER BY id DESC 
+                LIMIT 1";
+        
+        $db = config::getConnexion();
+        try {
+            $query = $db->prepare($sql);
+            $query->execute(['user_id' => $user_id]);
+            $result = $query->fetch();
+            
+            // Check if a result exists and return the ID, otherwise return null
+            return $result ? (int) $result['id'] : null;
+        } catch (Exception $e) {
+            die('Error: ' . $e->getMessage());
+        }
+    }
+    
 
   
 

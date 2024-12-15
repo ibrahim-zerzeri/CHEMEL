@@ -2,6 +2,10 @@
 session_start(); // Start session to manage cart data
 include_once '../../Controller/BasketController.php';
 
+if (!(isset($_SESSION['user']))){  
+    header("location:SIGNIN.php",true);
+}
+
 // Initialize the controllers
 $productController = new ProductController();
 $basketController = new BasketController();
@@ -13,13 +17,14 @@ $products = $productController->listProducts();
 
 
 // Get the total quantity of products in the cart
-if (isset($_SESSION['basket_id']) && isset($_SESSION['totalQuantity'])) {
+if (isset($_SESSION['basket_id']) && isset($_SESSION['totalQuantity']) && isset($_SESSION['user'])) {
   $totalQuantity = $_SESSION['totalQuantity'];
   $basketId = $_SESSION['basket_id'];
+  $user_id  = $_SESSION['user'];
   // Now you can use $basketId to fetch the cart contents, etc.
 } else {
   // Handle the case where basket_id is not in the session
-  echo "Basket ID not found.";
+echo "Error: Basket ID not found in the session.";
 }
 if (isset($_POST['add_to_cart'])) {
   $productId = $_POST['product_id'];
@@ -90,7 +95,9 @@ $totalQuantity=$basketController->getTotalQuantity($basketId);
 	          
 	          <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span><?php echo htmlspecialchars('['.($totalQuantity ?? "0").']') ; ?></a></li>
-
+            <li class="nav-item cta cta-colored"><a href="SIGNOUT.php" class="nav-link"><span class="icon-shopping_cart"></span>Profile:  <?php
+    echo $_SESSION['user']->username;
+    ?>Logout</a></li>
 	        </ul>
 	      </div>
 	    </div>

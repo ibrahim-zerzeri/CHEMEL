@@ -1,3 +1,10 @@
+<?php
+session_start();
+if (!(isset($_SESSION['user']))){  
+    header("location:SIGNIN.php",true);
+}
+$totalQuantity = $_SESSION['totalQuantity'];
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -44,7 +51,11 @@
 	          <li class="nav-item"><a href="about.php" class="nav-link">About</a></li>
 	          
 	          <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
-	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span>[0]</a></li>
+	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span><?php echo htmlspecialchars('['.($totalQuantity ?? "0").']') ; ?></a></li>
+			  <li class="nav-item cta cta-colored"><a href="SIGNOUT.php" class="nav-link"><span class="icon-shopping_cart"></span>Profile:  <?php
+    echo $_SESSION['user']->username;
+    ?> Logout</a></li>
+
 
 	        </ul>
 	      </div>

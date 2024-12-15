@@ -22,9 +22,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Modify product</title>
-    <link rel="stylesheet" href="./assets/vendor/bootstrap/css/bootstrap.min.css">
-    <link href="./assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/libs/css/style.css">
+    <link rel="stylesheet" href="../../assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="../../assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/libs/css/style.css">
+    <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
 </head>
 <body>
     <div class="dashboard-main-wrapper">

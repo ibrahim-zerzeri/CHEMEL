@@ -43,9 +43,25 @@
 <?php
 session_start();
 include '../../controller/UserController.php';
+include '../../Controller/BasketController.php';
+
+$BasketController = new BasketController();
+
 $pdo = config::getConnexion();
 if (isset($_SESSION['user'])){
-    header("location: homepage.php",true);
+    $userId = $_SESSION['user']->id;
+    $latestBasketId = $BasketController->getLatestBasketForUser($userId);
+    
+    if ($latestBasketId!==null ) {
+        $quantityOfLatestBasket= $BasketController->getTotalQuantity($latestBasketId);
+    $_SESSION['basket_id'] = $latestBasketId;
+    $_SESSION['totalQuantity'] = $quantityOfLatestBasket;
+    } else {
+        $_SESSION['basket_id'] = $BasketController->createBasket($userId);
+        $_SESSION['totalQuantity'] = 0;
+        
+    }
+    header("location: index.php",true);
 
 }
 if (isset($_POST['signin']))
@@ -66,8 +82,21 @@ if (isset($_POST['signin']))
      else if ($checkUSER->activation_token_hash!=NULL)
      {echo'<div class="alert alert-warning">COMPLETE EMAIL VERIFICATION ! </div>';}
     else {
+     
     $_SESSION['user']=$checkUSER;
-    header("location:homepage.php",true);
+    $userId = $_SESSION['user']->id;
+    $latestBasketId = $BasketController->getLatestBasketForUser($userId);
+
+    if ($latestBasketId!==null) {
+        $quantityOfLatestBasket= $BasketController->getTotalQuantity($latestBasketId);
+    $_SESSION['basket_id'] = $latestBasketId;
+    $_SESSION['totalQuantity'] = $quantityOfLatestBasket;
+    } else {
+        $_SESSION['basket_id'] = $BasketController->createBasket($userId);
+        $_SESSION['totalQuantity'] = 0;
+        
+    }
+    header("location:index.php",true);
 }
 
 }

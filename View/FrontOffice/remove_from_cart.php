@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+if (!(isset($_SESSION['user']))){  
+    header("location:SIGNIN.php",true);
+}
 include_once '../../Controller/BasketController.php';
 
 $basketController = new BasketController();

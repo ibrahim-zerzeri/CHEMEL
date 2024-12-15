@@ -1,4 +1,5 @@
 <?php
+include '../../controller/BasketController.php';
 include '../../controller/UserController.php';
 $travelOfferC = new UserController();
 $list = $travelOfferC->listUsers();

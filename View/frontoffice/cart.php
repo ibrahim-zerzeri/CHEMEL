@@ -1,6 +1,9 @@
 <?php
 session_start();
 
+if (!(isset($_SESSION['user']))){  
+    header("location:SIGNIN.php",true);
+}
 include '../../Controller/BasketController.php';
 
 $productC = new ProductController();
@@ -15,7 +18,7 @@ if (isset($_SESSION['basket_id']) && isset($_SESSION['totalQuantity'])) {
   // Now you can use $basketId to fetch the cart contents, etc.
 } else {
   // Handle the case where basket_id is not in the session
-  echo "Basket ID not found.";
+  echo "Error: Basket ID not found in the session.";
 }
 $totalQuantity=$basket_contents->getTotalQuantity($basketId);
 $liste = $basket_contents->getBasketContents($basketId);
@@ -77,7 +80,9 @@ $liste = $basket_contents->getBasketContents($basketId);
 	          
 	          <li class="nav-item"><a href="contact.php" class="nav-link">Contact</a></li>
 	          <li class="nav-item cta cta-colored"><a href="cart.php" class="nav-link"><span class="icon-shopping_cart"></span><?php echo htmlspecialchars('['.($totalQuantity ?? "0").']') ; ?></a></li>
-
+            <li class="nav-item cta cta-colored"><a href="SIGNOUT.php" class="nav-link"><span class="icon-shopping_cart"></span>Profile:  <?php
+    echo $_SESSION['user']->username;
+    ?>Logout</a></li>
 	        </ul>
 	      </div>
 	    </div>
@@ -169,7 +174,7 @@ foreach ($liste as $product):
     						<span><?php echo number_format($totalAmount, 2); ?>DT</span>
     					</p>
     				</div>
-    				<p class="text-center">  <a href="checkout.php" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
+    				<p class="text-center">  <a href="confirmCart.php" class="btn btn-primary py-3 px-4">Proceed to Checkout</a></p>
     			</div>
     		</div>
 			</div>

@@ -21,10 +21,10 @@ $products = $pController->listProducts();
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Products Management</title>
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="./assets/vendor/bootstrap/css/bootstrap.min.css">
-    <link href="./assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/libs/css/style.css">
-    <link rel="stylesheet" href="./assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
+    <link rel="stylesheet" href="../../assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link href="../../assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../assets/libs/css/style.css">
+    <link rel="stylesheet" href="../../assets/vendor/fonts/fontawesome/css/fontawesome-all.css">
     <style>
         .error-message {
             color: red;
@@ -157,20 +157,18 @@ John Abraham</h5>
         <div class="nav-left-sidebar sidebar-dark">
     <div class="menu-list">
         <nav class="navbar navbar-expand-lg navbar-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-</button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav flex-column">
 
                     <!-- Marketplace Menu -->
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'active' : ''; ?>" 
-                           href="#" data-toggle="collapse" aria-expanded="<?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'true' : 'false'; ?>" 
-                           data-target="#submenu-marketplace" aria-controls="submenu-marketplace">
+                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'active' : ''; ?>" href="#" aria-expanded="true">
                             <i class="fa fa-fw fa-rocket"></i>Marketplace
                         </a>
-                        <div id="submenu-marketplace" class="collapse submenu <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'show' : ''; ?>">
+                        <div id="submenu-marketplace" class="submenu show"> <!-- Removed collapse class and always show -->
                             <ul class="nav flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link <?php echo ($currentPage === 'products.php') ? 'active' : ''; ?>" href="products.php">Products</a>
@@ -184,7 +182,7 @@ John Abraham</h5>
 
                     <!-- User Management Menu -->
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'user-management.php') ? 'active' : ''; ?>" href="user-management.php">
+                        <a class="nav-link <?php echo ($currentPage === 'User-management.php') ? 'active' : ''; ?>" href="User-management.php">
                             <i class="fa fa-fw fa-users"></i>User Management
                         </a>
                     </li>
@@ -234,7 +232,7 @@ John Abraham</h5>
                         <h2 class="pageheader-title">Products Management</h2>
                         <p class="pageheader-text">Add and remove products from the list below.</p>
                     </div>
-                    <a href="user-management.php" class="btn btn-secondary">Go to User Management</a>
+                  
                 </div>
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
