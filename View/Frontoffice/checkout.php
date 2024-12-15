@@ -64,24 +64,24 @@ if (
     
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800" rel="stylesheet">
 
-    <link rel="stylesheet" href="css/open-iconic-bootstrap.min.css">
-    <link rel="stylesheet" href="css/animate.css">
+    <link rel="stylesheet" href="css_tarek/open-iconic-bootstrap.min.css">
+    <link rel="stylesheet" href="css_tarek/animate.css">
     
-    <link rel="stylesheet" href="css/owl.carousel.min.css">
-    <link rel="stylesheet" href="css/owl.theme.default.min.css">
-    <link rel="stylesheet" href="css/magnific-popup.css">
+    <link rel="stylesheet" href="css_tarek/owl.carousel.min.css">
+    <link rel="stylesheet" href="css_tarek/owl.theme.default.min.css">
+    <link rel="stylesheet" href="css_tarek/magnific-popup.css">
 
-    <link rel="stylesheet" href="css/aos.css">
+    <link rel="stylesheet" href="css_tarek/aos.css">
 
-    <link rel="stylesheet" href="css/ionicons.min.css">
+    <link rel="stylesheet" href="css_tarek/ionicons.min.css">
 
-    <link rel="stylesheet" href="css/bootstrap-datepicker.css">
-    <link rel="stylesheet" href="css/jquery.timepicker.css">
+    <link rel="stylesheet" href="css_tarek/bootstrap-datepicker.css">
+    <link rel="stylesheet" href="css_tarek/jquery.timepicker.css">
 
     
-    <link rel="stylesheet" href="css/flaticon.css">
-    <link rel="stylesheet" href="css/icomoon.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css_tarek/flaticon.css">
+    <link rel="stylesheet" href="css_tarek/icomoon.css">
+    <link rel="stylesheet" href="css_tarek/style.css">
   </head>
   <body class="goto-here">
 		<div class="py-1 bg-black">
@@ -315,22 +315,22 @@ if (
   <div id="ftco-loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#F96D00"/></svg></div>
 
 
-  <script src="js/jquery.min.js"></script>
-  <script src="js/jquery-migrate-3.0.1.min.js"></script>
-  <script src="js/popper.min.js"></script>
-  <script src="js/bootstrap.min.js"></script>
-  <script src="js/jquery.easing.1.3.js"></script>
-  <script src="js/jquery.waypoints.min.js"></script>
-  <script src="js/jquery.stellar.min.js"></script>
-  <script src="js/owl.carousel.min.js"></script>
-  <script src="js/jquery.magnific-popup.min.js"></script>
-  <script src="js/aos.js"></script>
-  <script src="js/jquery.animateNumber.min.js"></script>
-  <script src="js/bootstrap-datepicker.js"></script>
-  <script src="js/scrollax.min.js"></script>
+  <script src="js_tarek/jquery.min.js"></script>
+  <script src="js_tarek/jquery-migrate-3.0.1.min.js"></script>
+  <script src="js_tarek/popper.min.js"></script>
+  <script src="js_tarek/bootstrap.min.js"></script>
+  <script src="js_tarek/jquery.easing.1.3.js"></script>
+  <script src="js_tarek/jquery.waypoints.min.js"></script>
+  <script src="js_tarek/jquery.stellar.min.js"></script>
+  <script src="js_tarek/owl.carousel.min.js"></script>
+  <script src="js_tarek/jquery.magnific-popup.min.js"></script>
+  <script src="js_tarek/aos.js"></script>
+  <script src="js_tarek/jquery.animateNumber.min.js"></script>
+  <script src="js_tarek/bootstrap-datepicker.js"></script>
+  <script src="js_tarek/scrollax.min.js"></script>
   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
-  <script src="js/google-map.js"></script>
-  <script src="js/main.js"></script>
+  <script src="js_tarek/google-map.js"></script>
+  <script src="js_tarek/main.js"></script>
 
   <script>
 		$(document).ready(function(){
