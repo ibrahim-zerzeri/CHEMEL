@@ -159,7 +159,7 @@ John Abraham</h5>
 
                     <!-- Marketplace Menu -->
                     <li class="nav-item">
-                        <a class="nav-link active" href="#" aria-expanded="true">
+                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'active' : ''; ?>" href="#" aria-expanded="true">
                             <i class="fa fa-fw fa-rocket"></i>Marketplace
                         </a>
                         <div id="submenu-marketplace" class="submenu show"> <!-- Removed collapse class and always show -->
@@ -169,6 +169,23 @@ John Abraham</h5>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link <?php echo ($currentPage === 'basket.php') ? 'active' : ''; ?>" href="basket.php">Baskets</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    <!-- Order/Delivery Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'orderList.php' || $currentPage === 'livraisonList.php') ? 'active' : ''; ?>" href="#"  aria-expanded="true">
+                            <i class="fa fa-fw fa-truck"></i>Order/Delivery
+                        </a>
+                        <div id="submenu-order-delivery" class="submenu show"> 
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'orderList.php') ? 'active' : ''; ?>" href="orderList.php">Order List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'livraisonList.php') ? 'active' : ''; ?>" href="livraisonList.php">Delivery List</a>
                                 </li>
                             </ul>
                         </div>

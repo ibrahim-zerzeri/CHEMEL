@@ -7,7 +7,7 @@ $idP = $status = "";
 
 // Connexion à la base de données
 try {
-    $pdo = DatabaseConfig::getConnexion();
+    $pdo = config::getConnexion();
 } catch (Exception $e) {
     die("Connexion à la base de données échouée : " . $e->getMessage());
 }

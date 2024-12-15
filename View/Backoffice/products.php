@@ -180,6 +180,23 @@ John Abraham</h5>
                         </div>
                     </li>
 
+                    <!-- Order/Delivery Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'orderList.php' || $currentPage === 'livraisonList.php') ? 'active' : ''; ?>" href="#"  aria-expanded="true">
+                            <i class="fa fa-fw fa-truck"></i>Order/Delivery
+                        </a>
+                        <div id="submenu-order-delivery" class="submenu show"> 
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'orderList.php') ? 'active' : ''; ?>" href="orderList.php">Order List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'livraisonList.php') ? 'active' : ''; ?>" href="livraisonList.php">Delivery List</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <!-- User Management Menu -->
                     <li class="nav-item">
                         <a class="nav-link <?php echo ($currentPage === 'User-management.php') ? 'active' : ''; ?>" href="User-management.php">
@@ -211,6 +228,7 @@ John Abraham</h5>
         </nav>
     </div>
 </div>
+
 
         
         <!-- ============================================================== -->

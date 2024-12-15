@@ -152,7 +152,8 @@ foreach ($liste as $product):
         
         <td class="total"><?php echo number_format($product['PRICE'] * $quantity, 2); ?>DT</td>
       </tr>
-      <?php $totalAmount = $totalAmount + ($product['PRICE'] * $quantity); ?>
+      <?php $totalAmount = $totalAmount + ($product['PRICE'] * $quantity);
+      $_SESSION['totalAmount'] = $totalAmount;  ?>
     <?php endif; ?>
 <?php endforeach; ?>
 

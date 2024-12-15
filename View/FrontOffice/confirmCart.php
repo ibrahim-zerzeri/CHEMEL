@@ -24,9 +24,11 @@ $quantityOfLatestBasket= $basketController->getTotalQuantity($latestBasketId);
 if ($latestBasketId!==null && $quantityOfLatestBasket===0) {
 $_SESSION['basket_id'] = $latestBasketId;
 $_SESSION['totalQuantity'] = $quantityOfLatestBasket;
+header("Location: cart.php");
 } else {
     $_SESSION['basket_id'] = $basketController->createBasket($userId);
     $_SESSION['totalQuantity'] = 0;
+    header("Location: checkout.php");
     
 }
 
@@ -36,7 +38,7 @@ $_SESSION['totalQuantity'] = $quantityOfLatestBasket;
 
 
 // Redirect the user to the checkout page
-header("Location: cart.php");
+
 exit();
 ?>
 

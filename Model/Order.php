@@ -25,15 +25,17 @@ class Order {
     private ?string $address;
     private ?string $postal_code;
     private ?string $phone;
+    private ?int $basket_id;
 
     // Constructeur
-    public function __construct(?int $id, ?string $client_name, ?string $product, ?string $address, ?string $postal_code, ?string $phone) {
+    public function __construct(?int $id, ?string $client_name, ?string $product, ?string $address, ?string $postal_code, ?string $phone, ?int $basket_id) {
         $this->id = $id;
         $this->client_name = $client_name;
         $this->product = $product;
         $this->address = $address;
         $this->postal_code = $postal_code;
         $this->phone = $phone;
+        $this->basket_id = $basket_id;
     }
 
     // Getters et Setters
@@ -84,6 +86,14 @@ class Order {
 
     public function setPhone(?string $phone): void {
         $this->phone = $phone;
+    }
+
+    public function getBasketId(): ?int {
+        return $this->basket_id;
+    }
+
+    public function setBasketId(?int $basket_id): void {
+        $this->basket_id = $basket_id;
     }
 }
 

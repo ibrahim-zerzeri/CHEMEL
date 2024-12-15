@@ -1,3 +1,8 @@
+<?php
+session_start();
+
+$totalAmount=$_SESSION['totalAmount'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +19,7 @@
         return actions.order.create({
             purchase_units: [{
                 amount: {
-                    value: '0.01'
+                    value: '<?php echo ($totalAmount) ; ?>'
                 }
             }]
         });

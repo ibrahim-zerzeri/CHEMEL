@@ -57,20 +57,18 @@ try {
         <div class="nav-left-sidebar sidebar-dark">
     <div class="menu-list">
         <nav class="navbar navbar-expand-lg navbar-light">
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-</button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav flex-column">
 
                     <!-- Marketplace Menu -->
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'active' : ''; ?>" 
-                           href="#" data-toggle="collapse" aria-expanded="<?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'true' : 'false'; ?>" 
-                           data-target="#submenu-marketplace" aria-controls="submenu-marketplace">
+                        <a class="nav-link <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'active' : ''; ?>" href="#" aria-expanded="true">
                             <i class="fa fa-fw fa-rocket"></i>Marketplace
                         </a>
-                        <div id="submenu-marketplace" class="collapse submenu <?php echo ($currentPage === 'products.php' || $currentPage === 'basket.php') ? 'show' : ''; ?>">
+                        <div id="submenu-marketplace" class="submenu show"> <!-- Removed collapse class and always show -->
                             <ul class="nav flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link <?php echo ($currentPage === 'products.php') ? 'active' : ''; ?>" href="products.php">Products</a>
@@ -82,9 +80,26 @@ try {
                         </div>
                     </li>
 
+                    <!-- Order/Delivery Menu -->
+                    <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'orderList.php' || $currentPage === 'livraisonList.php') ? 'active' : ''; ?>" href="#"  aria-expanded="true">
+                            <i class="fa fa-fw fa-truck"></i>Order/Delivery
+                        </a>
+                        <div id="submenu-order-delivery" class="submenu show"> 
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'orderList.php') ? 'active' : ''; ?>" href="orderList.php">Order List</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'livraisonList.php') ? 'active' : ''; ?>" href="livraisonList.php">Delivery List</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
                     <!-- User Management Menu -->
                     <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'user-management.php') ? 'active' : ''; ?>" href="user-management.php">
+                        <a class="nav-link <?php echo ($currentPage === 'User-management.php') ? 'active' : ''; ?>" href="User-management.php">
                             <i class="fa fa-fw fa-users"></i>User Management
                         </a>
                     </li>
@@ -113,6 +128,7 @@ try {
         </nav>
     </div>
 </div>
+
 
 
         <!-- Page Content -->

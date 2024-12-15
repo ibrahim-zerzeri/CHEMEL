@@ -7,7 +7,7 @@ $client_name = $product = $address = $postal_code = $phone = "";
 
 // Connexion à la base de données
 try {
-    $pdo = DatabaseConfig::getConnexion();
+    $pdo = config::getConnexion();
     echo "Connexion à la base de données réussie.";
 } catch (Exception $e) {
     echo "Connexion à la base de données échouée: " . $e->getMessage();
