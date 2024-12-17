@@ -235,18 +235,28 @@ if (!$courseDetails) {
                         Download PDF
                     </a>
                 </button>
-      <!-- Form to select quiz level and pass course ID -->
-      <form method="GET" action="quiz.php">
-                <input type="hidden" name="id" value="<?= htmlspecialchars($_GET['id']); ?>">
-                <label for="level">Select Quiz Level</label>
-                <select name="level" id="level" required>
-                    <option value="" selected disabled>Choose a quiz level</option>
-                    <option value="1">Easy</option>
-                    <option value="2">Medium</option>
-                    <option value="3">Hard</option>
-                </select>
-                <button class="btn btn-primary mt-2" type="submit">Go to Quiz</button>
-            </form>
+                <form method="GET" action="quiz.php">
+    <input type="hidden" name="id" value="<?= htmlspecialchars($_GET['id']); ?>">
+    <label for="level" class="form-label fs-4 text-dark">Select Quiz Level</label>
+    
+    <div class="position-relative">
+        <select name="level" id="level" class="form-select form-select-lg shadow-sm border-0 rounded-3 px-3 py-2" required>
+            <option value="" selected disabled>Choose a quiz level</option>
+            <option value="1">Easy</option>
+            <option value="2">Medium</option>
+            <option value="3">Hard</option>
+        </select>
+        
+        <!-- Optional icon for better user interaction (you can add a custom icon) -->
+        <div class="position-absolute top-50 end-0 translate-middle-y pe-3">
+            <i class="fas fa-caret-down text-muted"></i>
+        </div>
+    </div>
+    
+    <button class="btn btn-primary mt-3 rounded-pill px-4 py-2" type="submit">Go to Quiz</button>
+</form>
+
+
 
                 <!-- PDF Container (Hidden by default) -->
                 <iframe id="pdfIframe" src="../BackOffice/<?php echo htmlspecialchars($courseDetails['pdf_file']); ?>"></iframe>

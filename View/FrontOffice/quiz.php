@@ -1,8 +1,9 @@
 <?php
+session_start();
 // Include necessary files to handle quizzes and course data
 include_once(__DIR__ . '/../../Controller/QuizController.php');
 include_once(__DIR__ . '/../../Model/Quiz.php');
-
+ // Assuming this is where saveScore method exists
 $quizController = new QuizController();
 
 // Get course_id and level from the URL
@@ -16,21 +17,40 @@ if (isset($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['level']) && is
     exit;
 }
 
+if (isset($_SESSION['user'])) {
+    $user_id = $_SESSION['user'];
+    $user_score = $quizController->getUserScore($user_id);  // User ID from the session
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $results = [];
+    $correct_answers = 0;
     foreach ($quizzes as $quiz) {
         $user_answer = $_POST['quiz_' . $quiz['id']] ?? null; // Get the user's answer
 
         // Compare the user's answer with the correct answer
         $correct_answer = $quiz['correct_option'];
         $is_correct = ($user_answer === $correct_answer);
+        if ($is_correct) {
+            $correct_answers++;
+        }
         $results[] = [
             'quiz_id' => $quiz['id'],
             'is_correct' => $is_correct,
             'user_answer' => $user_answer,
             'correct_answer' => $correct_answer
         ];
+    }
+
+    // Calculate the score
+    $score = ($correct_answers / count($quizzes)) * 100;
+
+    // Save the score using the saveScore method from your Model
+    if ($quizController->saveScore($user_id, $score)) {
+        echo "<p>Score saved successfully!</p>";
+    } else {
+        echo "<p>There was an error saving your score.</p>";
     }
 }
 ?>
@@ -153,6 +173,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </style>
 </head>
 <body>
+
+<div class="text-center">
+            <?php if ($user_score !== null): ?>
+                <h2 class="text-success">Your Score: <?php echo htmlspecialchars($user_score); ?>%</h2>
+            <?php else: ?>
+                <p class="text-danger">No score available. Take a quiz to see your results.</p>
+            <?php endif; ?>
+        </div>
     <h1>Quizzes for: <?php echo htmlspecialchars($course['name'] ?? 'Unknown'); ?></h1>
 
     <form method="POST">
@@ -205,6 +233,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </tbody>
         </table>
     </div>
-<?php endif; ?>
+    <?php endif; ?>
 </body>
 </html>
