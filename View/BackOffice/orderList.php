@@ -1,6 +1,7 @@
 <?php
 $currentPage = basename($_SERVER['PHP_SELF']);
 // Inclure le contrôleur d'ordres
+include '../../Controller/BasketController.php';
 include '../../controller/OrderController.php';
 $orderController = new OrderController();
 $list = $orderController->listOrders(); // Liste des ordres
@@ -209,19 +210,21 @@ John Abraham</h5>
                     </li>
 
                     <!-- Learning Section -->
-                    <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'courses.php' || $currentPage === 'quiz.php') ? 'active' : ''; ?>" 
-                           href="#" data-toggle="collapse" aria-expanded="<?php echo ($currentPage === 'courses.php' || $currentPage === 'quiz.php') ? 'true' : 'false'; ?>" 
-                           data-target="#submenu-learning" aria-controls="submenu-learning">
+               
+                  <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'courses.php' || $currentPage === 'subjects.php' || $currentPage === 'ManageQuiz.php') ? 'active' : ''; ?>" href="#" aria-expanded="true">
                             <i class="fa fa-fw fa-book"></i>Learning
                         </a>
-                        <div id="submenu-learning" class="collapse submenu <?php echo ($currentPage === 'courses.php' || $currentPage === 'quiz.php') ? 'show' : ''; ?>">
+                        <div id="submenu-marketplace" class="submenu show"> <!-- Removed collapse class and always show -->
                             <ul class="nav flex-column">
                                 <li class="nav-item">
                                     <a class="nav-link <?php echo ($currentPage === 'courses.php') ? 'active' : ''; ?>" href="courses.php">Courses</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo ($currentPage === 'quiz.php') ? 'active' : ''; ?>" href="quiz.php">Quiz</a>
+                                    <a class="nav-link <?php echo ($currentPage === 'subjects.php') ? 'active' : ''; ?>" href="subjects.php">Subjects</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link <?php echo ($currentPage === 'ManageQuiz.php') ? 'active' : ''; ?>" href="ManageQuiz.php">Quizzs</a>
                                 </li>
                             </ul>
                         </div>
