@@ -1,24 +1,31 @@
 <?php
+// Get the current file name
 $currentPage = basename($_SERVER['PHP_SELF']);
 
+// Include database configuration file and BasketController
 include '../../Controller/QuizController.php';
 
-$conn = config::getConnexion(); 
-$sql = "SELECT * FROM quizzes";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$quizzes = $stmt->fetchAll();
+// Initialize the BasketController
+$quizController = new QuizController();
+
+try {
+    // Fetch all baskets from the database to display in the table
+    $results = $quizController->results();
+} catch (Exception $e) {
+    echo 'Error fetching baskets: ' . $e->getMessage();
+}
 ?>
 
 <!doctype html>
 <html lang="en">
 
 <head>
-   
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Quiz Management</title>
-   
+    <title>Baskets Management</title>
+
+    <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="../../assets/vendor/bootstrap/css/bootstrap.min.css">
     <link href="../../assets/vendor/fonts/circular-std/style.css" rel="stylesheet">
     <link rel="stylesheet" href="../../assets/libs/css/style.css">
@@ -27,10 +34,10 @@ $quizzes = $stmt->fetchAll();
 
 <body>
     <div class="dashboard-main-wrapper">
-    
+        <!-- Navbar -->
         <div class="dashboard-header">
             <nav class="navbar navbar-expand-lg bg-white fixed-top">
-                <a class="navbar-brand" href="./dashboard.php">Quiz Manager</a>
+                <a class="navbar-brand" href="./User-management.php">CHEMEL</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -41,23 +48,12 @@ $quizzes = $stmt->fetchAll();
                                 <input class="form-control" type="text" placeholder="Search..">
                             </div>
                         </li>
-                        <li class="nav-item dropdown nav-user">
-                            <a class="nav-link nav-user-img" href="#" id="navbarDropdownMenuLink2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../assets/images/avatar-1.jpg" alt="" class="user-avatar-md rounded-circle"></a>
-                            <div class="dropdown-menu dropdown-menu-right nav-user-dropdown" aria-labelledby="navbarDropdownMenuLink2">
-                                <div class="nav-user-info">
-                                    <h5 class="mb-0 text-white nav-user-name">John Doe</h5>
-                                    <span class="status"></span><span class="ml-2">Available</span>
-                                </div>
-                                <a class="dropdown-item" href="#"><i class="fas fa-user mr-2"></i>Account</a>
-                                <a class="dropdown-item" href="#"><i class="fas fa-power-off mr-2"></i>Logout</a>
-                            </div>
-                        </li>
+                        <!-- Notification and User Profile dropdown -->
                     </ul>
                 </div>
             </nav>
         </div>
-
-        
+        <!-- Sidebar -->
         <div class="nav-left-sidebar sidebar-dark">
     <div class="menu-list">
         <nav class="navbar navbar-expand-lg navbar-light">
@@ -111,7 +107,7 @@ $quizzes = $stmt->fetchAll();
                     <!-- Learning Section -->
                
                   <li class="nav-item">
-                        <a class="nav-link <?php echo ($currentPage === 'courses.php' || $currentPage === 'subjects.php' || $currentPage === 'ManageQuiz.php'|| $currentPage === 'result.php') ? 'active' : ''; ?>" href="#" aria-expanded="true">
+                        <a class="nav-link <?php echo ($currentPage === 'courses.php' || $currentPage === 'subjects.php' || $currentPage === 'ManageQuiz.php') ? 'active' : ''; ?>" href="#" aria-expanded="true">
                             <i class="fa fa-fw fa-book"></i>Learning
                         </a>
                         <div id="submenu-marketplace" class="submenu show"> <!-- Removed collapse class and always show -->
@@ -123,9 +119,8 @@ $quizzes = $stmt->fetchAll();
                                     <a class="nav-link <?php echo ($currentPage === 'subjects.php') ? 'active' : ''; ?>" href="subjects.php">Subjects</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link <?php echo ($currentPage === 'ManageQuiz.php') ? 'active' : ''; ?>" href="ManageQuiz.php">Quizzes</a>
+                                    <a class="nav-link <?php echo ($currentPage === 'ManageQuiz.php') ? 'active' : ''; ?>" href="ManageQuiz.php">Quizzs</a>
                                 </li>
-                
                             </ul>
                         </div>
                     </li>
@@ -136,89 +131,80 @@ $quizzes = $stmt->fetchAll();
     </div>
 </div>
 
-        
+
+
+        <!-- Page Content -->
         <div class="dashboard-wrapper">
             <div class="container-fluid dashboard-content">
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="page-header">
-                            <h2 class="pageheader-title">Quiz Management</h2>
-                            <p class="pageheader-text">Add, edit, and manage quizzes.</p>
+                            <h2 class="pageheader-title">Users quizzes results</h2>
+                            <p class="pageheader-text">View users quizzes results</p>
                         </div>
                     </div>
                 </div>
 
-
-                <a href="addQuiz.php" class="btn btn-primary btn-sm">Add Quiz</a>
-
-                <a href="result.php" class="btn btn-primary btn-sm">View users quizzes results</a>
-
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
                         <div class="card">
-                            <h5 class="card-header">Quiz List</h5>
+                            <h5 class="card-header">Users results</h5>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped table-bordered">
+                                    <table class="table table-striped table-bordered" id="basketTable">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Course ID</th>
-                                                <th>Subject ID</th>
-                                                <th>Question</th>
-                                                <th>Option A</th>
-                                                <th>Option B</th>
-                                                <th>Option C</th>
-                                                <th>Option D</th>
-                                                <th>Correct Option</th>
-                                                <th>Level</th>
-                                                <th>Actions</th>
+                                                <th>Result ID</th>
+                                                <th>User ID</th>
+                                                <th>Score</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <?php foreach ($quizzes as $quiz): ?>
+                                            <?php if (!empty($results)): ?>
+                                                <?php foreach ($results as $result): ?>
+                                                    <tr>
+                                                 
+                                                        <td><?php echo $result['id']; ?></td>
+                                                        <td><?php echo $result['user_id']; ?></td>
+                                                        <td><?php echo $result['score']; ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            <?php else: ?>
                                                 <tr>
-                                                    <td><?php echo $quiz['id']; ?></td>
-                                                    <td><?php echo $quiz['course_id']; ?></td>
-                                                    <td><?php echo $quiz['subject_id']; ?></td>
-                                                    <td><?php echo $quiz['question']; ?></td>
-                                                    <td><?php echo $quiz['option_a']; ?></td>
-                                                    <td><?php echo $quiz['option_b']; ?></td>
-                                                    <td><?php echo $quiz['option_c']; ?></td>
-                                                    <td><?php echo $quiz['option_d']; ?></td>
-                                                    <td><?php echo $quiz['correct_option']; ?></td>
-                                                    <td> <?php 
-                    // Check the level and display corresponding text
-                    if ($quiz['level'] == 1) {
-                        echo "Easy";
-                    } elseif ($quiz['level'] == 2) {
-                        echo "Medium";
-                    } else {
-                        echo "Hard";
-                    }
-                ?></td>
-                                                    <td>
-                                                        <a href="editQuiz.php?id=<?php echo $quiz['id']; ?>" class="btn btn-primary btn-sm">Edit</a>
-                                                        <form method="POST" action="deleteQuiz.php" style="display:inline;">
-                                                            <input type="hidden" name="id" value="<?php echo $quiz['id']; ?>">
-                                                            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                                        </form>
-                                                    </td>
+                                                    <td colspan="3" class="text-center">No results found</td>
                                                 </tr>
-                                            <?php endforeach; ?>
+                                            <?php endif; ?>
                                         </tbody>
                                     </table>
+                                  
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+        
             </div>
         </div>
+ 
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-xl-12">
+                        <p class="text-center">© 2024 Your Company Name. All Rights Reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
     </div>
 
-    <script src="../assets/vendor/jquery/jquery-3.3.1.min.js"></script>
-    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="./assets/vendor/jquery/jquery-3.3.1.min.js"></script>
+    <script src="./assets/vendor/bootstrap/js/bootstrap.bundle.js"></script>
+    <script src="./assets/libs/js/main-js.js"></script>
 </body>
+
 </html>

@@ -11,6 +11,8 @@ class Quiz {
     private ?string $option_d;
     private ?string $correct_option;
 
+    private ?int $user_id;
+
     // Constructor
     public function __construct(
         ?int $id = null, 
@@ -22,12 +24,14 @@ class Quiz {
         ?string $option_b = null, 
         ?string $option_c = null, 
         ?string $option_d = null, 
-        ?string $correct_option = null
+        ?string $correct_option = null,
+        ?int $user_id = null
         
     ) {
         $this->id = $id;
         $this->course_id = $course_id;
         $this->subject_id = $subject_id;
+        $this->user_id = $user_id;
         $this->setQuestion($question);
         $this->setOptionA($option_a);
         $this->setOptionB($option_b);
@@ -131,6 +135,13 @@ class Quiz {
         } else {
             throw new InvalidArgumentException("Level must be one of [1, 2, 3]");
         }
+    }
+
+    public function getUserId(): ?int {
+        return $this->user_id;
+    }
+    public  function setUserId(?int $user_id): void {
+        $this->user_id = $user_id;  
     }
     
 
